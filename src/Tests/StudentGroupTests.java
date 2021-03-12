@@ -46,4 +46,30 @@ class StudentGroupTests {
 		memberList.add(owner);
 		assertEquals(group.getMembers(), memberList);
 	}
+
+	@Test
+	void testSetGroupName(){
+		String newGroupName = "Group Name";
+		StudentGroup group = new StudentGroup("Name", "Description", owner);
+		group.setGroupName(newGroupName);
+		assertEquals(group.getGroupName(), newGroupName);
+	}
+
+	@Test
+	void testSetGroupDescription(){
+		String newDescription = "Group description";
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner);
+		group.setDescription(newDescription);
+		assertEquals(group.getDescription(), newDescription);
+	}
+
+	@Test
+	void testSetOwner() {
+		Student newOwner = new Student("New Owner", "owner@wustl.edu", 2023, "Password");
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner);
+		group.setOwner(newOwner);
+		assertEquals(group.getOwner(), newOwner);
+	}
+
+
 }

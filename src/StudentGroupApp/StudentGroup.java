@@ -42,4 +42,21 @@ public class StudentGroup {
         return this.members;
     }
 
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setOwner(Student owner) {
+        this.owner = owner;
+        if(!members.contains(owner)) {
+            members.add(owner);
+        }
+        if(!admins.contains(owner)) {
+            members.add(owner);
+        }
+    }
 }
