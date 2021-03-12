@@ -1,5 +1,24 @@
 package StudentGroupApp;
 
-public class StudentGroup {
+import java.util.ArrayList;
 
+public class StudentGroup {
+    //Student group member variables
+    private String groupName;
+    private String description;
+    private Student owner;
+    private ArrayList<Student> admins;
+    private ArrayList<Student> members;
+    //TODO: add array list of events
+
+    //Student group initializer
+    public StudentGroup(String groupName, String description, Student owner) {
+        this.groupName = groupName;
+        this.description = description;
+        this.owner = owner;
+        this.admins = new ArrayList<Student>();
+        this.admins.add(owner);
+        this.members = new ArrayList<Student>();
+        this.members.add(owner);
+    }
 }
