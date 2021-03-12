@@ -7,13 +7,15 @@ public class Student {
 	private String name;
 	private String email;
 	private Integer classYear;
+	private String password;
 	//TODO: add a list of events
 
 	//initializer for student class
-	public Student(String name, String email, Integer classYear) {
+	public Student(String name, String email, Integer classYear, String password) {
 	    this.name = name;
 	    this.email = email;
 	    this.classYear = classYear;
+	    this.password = password;
     }
 
     //getters for student classs
@@ -41,4 +43,16 @@ public class Student {
 	public void setClassYear(Integer classYear) {
 		this.classYear = classYear;
 	}
+
+	//student class functions
+	public Boolean checkPassword(String passwordGuess) {
+		return passwordGuess.equals(password);
+	}
+
+	public void changePassword(String oldPassword, String newPassword) {
+		if (oldPassword.equals(password)) {
+			password = newPassword;
+		}
+	}
+
 }
