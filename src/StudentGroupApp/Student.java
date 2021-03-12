@@ -8,7 +8,7 @@ public class Student {
 	private String email;
 	private Integer classYear;
 	private String password;
-	//TODO: add a list of events
+	//TODO: add an array list of groups
 
 	//initializer for student class
 	public Student(String name, String email, Integer classYear, String password) {
