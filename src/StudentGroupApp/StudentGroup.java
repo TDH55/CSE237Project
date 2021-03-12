@@ -21,4 +21,25 @@ public class StudentGroup {
         this.members = new ArrayList<Student>();
         this.members.add(owner);
     }
+
+    public String getGroupName() {
+        return this.groupName;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public Student getOwner(){
+        return this.owner;
+    }
+
+    public ArrayList<Student> getAdmins(){
+        return this.admins;
+    }
+
+    public ArrayList<Student> getMembers(){
+        return this.members;
+    }
+
 }
