@@ -6,10 +6,13 @@ import StudentGroupApp.Student;
 import StudentGroupApp.StudentGroup;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 class StudentGroupTests {
 	Student owner = new Student("Taylor", "email@wustl.edu", 2022, "password123");
+	Student firstGroupMember = new Student("John", "johndoe@wustl.edu", 2023, "password123");
+	Student secondGroupMember = new Student("Jane", "janedoe@wustl.edu", 2021, "password123");
 
 	@Test
 	void testGetGroupName() {
@@ -71,5 +74,35 @@ class StudentGroupTests {
 		assertEquals(group.getOwner(), newOwner);
 	}
 
+	@Test
+	void testAddGroupMembers(){
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner);
+		group.addMember(firstGroupMember);
+		group.addMember(secondGroupMember);
+		ArrayList<Student> groupMembers = new ArrayList<Student>();
+		groupMembers.add(owner);
+		groupMembers.add(firstGroupMember);
+		groupMembers.add(secondGroupMember);
+		assertEquals(group.getMembers(), groupMembers);
+	}
 
+	@Test
+	void testAddToPrivateGroupSuccess(){
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner, true);
+		group.inviteStudent(firstGroupMember);
+		group.addMember(firstGroupMember);
+		ArrayList<Student> groupMembers = new ArrayList<Student>();
+		groupMembers.add(owner);
+		groupMembers.add(firstGroupMember);
+		assertEquals(group.getMembers(), groupMembers);
+	}
+
+	@Test
+	void testAddUninvitedStudentToPrivateGroup(){
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner, true);
+		group.addMember(firstGroupMember);
+		ArrayList<Student> groupMembers = new ArrayList<Student>();
+		groupMembers.add(owner);
+		assertEquals(group.getMembers(), groupMembers);
+	}
 }
