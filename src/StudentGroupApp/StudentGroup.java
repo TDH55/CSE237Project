@@ -94,11 +94,19 @@ public class StudentGroup {
         }
     }
 
-    public void inviteStudent(Student invitee) {
-        if(!invitedStudents.contains(invitee)) {
-            invitedStudents.add(invitee);
+    public void addAdmin(Student student) {
+        if(!admins.contains(student)){
+            admins.add(student);
         }
     }
 
+    public void inviteStudent(Student student) {
+        if(!invitedStudents.contains(student)) {
+            invitedStudents.add(student);
+        }
+    }
 
+    public void kickStudent(Student student) {
+        members.remove(student);
+    }
 }

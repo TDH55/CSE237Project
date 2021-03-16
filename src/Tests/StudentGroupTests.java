@@ -105,4 +105,28 @@ class StudentGroupTests {
 		groupMembers.add(owner);
 		assertEquals(group.getMembers(), groupMembers);
 	}
+
+	@Test
+	void testKickStudent(){
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner);
+		group.addMember(firstGroupMember);
+		group.addMember(secondGroupMember);
+		group.kickStudent(firstGroupMember);
+		ArrayList<Student> groupMembers = new ArrayList<Student>();
+		groupMembers.add(owner);
+		groupMembers.add(secondGroupMember);
+		assertEquals(group.getMembers(), groupMembers);
+	}
+
+	@Test
+	void testAddAdmin(){
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner);
+		group.addMember(firstGroupMember);
+		group.addMember(secondGroupMember);
+		group.addAdmin(secondGroupMember);
+		ArrayList<Student> adminList = new ArrayList<Student>();
+		adminList.add(owner);
+		adminList.add(secondGroupMember);
+		assertEquals(group.getAdmins(), adminList);
+	}
 }
