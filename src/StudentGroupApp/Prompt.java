@@ -37,7 +37,8 @@ public class Prompt {
 		this.students.add(studentToAdd);
 	}
 
-	private void addStudentGroupToList(StudentGroup groupToAdd) {
+	//I changed this to public to write the tests for search - Taylor
+	public void addStudentGroupToList(StudentGroup groupToAdd) {
 		this.groups.add(groupToAdd);
 	}
 
@@ -229,5 +230,16 @@ public class Prompt {
 		Student newStudent = new Student(name, email, classYear, password);
 		this.addStudentToList(newStudent);
 
+	}
+
+	public ArrayList<StudentGroup> searchGroups(String query) {
+		//TODO: Implement search
+		ArrayList<StudentGroup> results = new ArrayList<StudentGroup>();
+		for (StudentGroup group : this.groups) {
+			if (group.getGroupName().toLowerCase().equals(query.toLowerCase())) {
+				results.add(group);
+			}
+		}
+		return results;
 	}
 }
