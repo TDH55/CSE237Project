@@ -62,9 +62,7 @@ public class Prompt {
 	private void executeLoginMenu() {
 
 		String userName = this.keyboardIn.next();
-//		if (this.keyboardIn.hasNext()) {
-//			userName += " " + this.keyboardIn.next();
-//		}
+		keyboardIn.hasNextLine();
 		Student studentToBeLoggedIn = this.findStudentByName(userName);
 
 		if (studentToBeLoggedIn != null) {
@@ -124,7 +122,9 @@ public class Prompt {
 		
 		if (inputChoice == 0) {
 			//Create a group
-			createStudentGroup();
+			currentGroup = createStudentGroup();
+			displayViewGroupMenu();
+			executeViewGroupMenu();
 		}
 		else if (inputChoice == 1) {
 			for (int i = 0; i < groups.size(); i++) {
@@ -192,6 +192,7 @@ public class Prompt {
 		System.out.println("3. View group admins");
 		System.out.println("4. View group members");
 		System.out.println("5. Back to group menu");
+		System.out.println("6. Back to main menu");
 	}
 
 	private void executeViewGroupMenu() {
@@ -222,7 +223,10 @@ public class Prompt {
 		} else if (inputChoice == 5){
 			displaySelectGroupMenu();
 			executeSelectGroupMenu();
-		}	else {
+		} else if (inputChoice == 6){
+			displayRootMenu();
+			executeRootMenu();
+		} else {
 			System.out.println("Please enter a valid option");
 			displayRootMenu();
 			executeRootMenu();
