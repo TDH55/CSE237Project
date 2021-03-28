@@ -287,6 +287,7 @@ public class Prompt {
 		String groupName = this.keyboardIn.next();
 		System.out.println("Please input a description of this student group: ");
 		String groupDescription = this.keyboardIn.next();
+		keyboardIn.nextLine();
 		
 		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent);
 		this.addStudentGroupToList(newGroup);
