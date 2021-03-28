@@ -111,6 +111,7 @@ public class Prompt {
 		System.out.println("Current student: " + this.currentStudent.getName());
 		System.out.println();
 
+		System.out.println("0. Create a group");
 		System.out.println("1. See groups");
 		System.out.println("2. Search groups by name");
 		System.out.println("3. View a group");
@@ -120,7 +121,11 @@ public class Prompt {
 
 	private void executeRootMenu() {
 		int inputChoice = this.keyboardIn.nextInt();
-		if (inputChoice == 1) {
+		
+		if (inputChoice == 0) {
+			//Create a group
+		}
+		else if (inputChoice == 1) {
 			for (int i = 0; i < groups.size(); i++) {
 				System.out.println(groups.get(i).getGroupName());
 			}
@@ -179,9 +184,9 @@ public class Prompt {
 
 		System.out.println("1. See group description");
 		System.out.println("2. View group owner");
-		System.out.println("3. View a group admins");
-		System.out.println("4. View a group members");
-
+		System.out.println("3. View group admins");
+		System.out.println("4. View group members");
+		System.out.println("5. Back to group menu");
 	}
 
 	private void executeViewGroupMenu() {
@@ -201,10 +206,18 @@ public class Prompt {
 		} else if (inputChoice == 3) {
 			System.out.println(this.currentGroup.getGroupName() + " Admins: ");
 			displayListOfStudents(this.currentGroup.getAdmins());
+			displayViewGroupMenu();
+			executeViewGroupMenu();
 
 		} else if (inputChoice == 4) {
-
-		} else {
+			System.out.println(this.currentGroup.getGroupName() + " Members: ");
+			displayListOfStudents(this.currentGroup.getMembers());
+			displayViewGroupMenu();
+			executeViewGroupMenu();
+		} else if (inputChoice == 5){
+			displaySelectGroupMenu();
+			executeSelectGroupMenu();
+		}	else {
 			System.out.println("Please enter a valid option");
 			displayRootMenu();
 			executeRootMenu();
