@@ -124,6 +124,7 @@ public class Prompt {
 		
 		if (inputChoice == 0) {
 			//Create a group
+			createStudentGroup();
 		}
 		else if (inputChoice == 1) {
 			for (int i = 0; i < groups.size(); i++) {
@@ -274,5 +275,18 @@ public class Prompt {
 			}
 		}
 		return results;
+	}
+	
+	//create a new student group with current user as owner of group
+	private StudentGroup createStudentGroup() {
+		System.out.println("Please input a name for the group you would like to create:");
+		String groupName = this.keyboardIn.next();
+		System.out.println("Please input a description of this student group: ");
+		String groupDescription = this.keyboardIn.next();
+		
+		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent);
+		this.addStudentGroupToList(newGroup);
+
+		return newGroup;
 	}
 }
