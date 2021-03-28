@@ -132,7 +132,11 @@ public class Prompt {
 			displayRootMenu();
 			executeRootMenu();
 		} else if (inputChoice == 2) {
-			// Search groups by name
+			displaySearch();
+			executeSearch();
+			
+			displayRootMenu();
+			executeRootMenu();
 		} else if (inputChoice == 3) {
 			displaySelectGroupMenu();
 			executeSelectGroupMenu();
@@ -224,6 +228,22 @@ public class Prompt {
 		}
 	}
 	
+	private void displaySearch() {
+		System.out.println("Enter a search term for the group you want");
+	}
+	
+	private void executeSearch() {
+		String searchQuery = keyboardIn.next();
+		ArrayList<StudentGroup> searchResults = searchGroups(searchQuery);
+		if (searchResults.isEmpty()) {
+			System.out.println("No such group");
+		}
+		for (StudentGroup group : searchResults) {
+			System.out.println(group.getGroupName());
+		}
+		keyboardIn.nextLine();
+	}
+	
 	private void displayListOfStudents(ArrayList<Student> students) {
 		for (int i = 0; i < students.size(); i++) {
 			System.out.println(i + ". " + students.get(i).getName());
@@ -249,7 +269,7 @@ public class Prompt {
 		//TODO: Implement search
 		ArrayList<StudentGroup> results = new ArrayList<StudentGroup>();
 		for (StudentGroup group : this.groups) {
-			if (group.getGroupName().toLowerCase().equals(query.toLowerCase())) {
+			if (group.getGroupName().toLowerCase().contains(query.toLowerCase())) {
 				results.add(group);
 			}
 		}
