@@ -15,3 +15,5 @@
 ## Is there anything that you implemented but doesn't currently work?
 
 ## What commands are needed to compile and run your code from the command line (or better yet, provide a script that people can use to run your program!)
+- javac src/StudentGroupApp/*.java
+- java -cp src StudentGroupApp.Prompt
