@@ -62,9 +62,7 @@ public class Prompt {
 	private void executeLoginMenu() {
 
 		String userName = this.keyboardIn.next();
-//		if (this.keyboardIn.hasNext()) {
-//			userName += " " + this.keyboardIn.next();
-//		}
+		keyboardIn.hasNextLine();
 		Student studentToBeLoggedIn = this.findStudentByName(userName);
 
 		if (studentToBeLoggedIn != null) {
@@ -111,6 +109,7 @@ public class Prompt {
 		System.out.println("Current student: " + this.currentStudent.getName());
 		System.out.println();
 
+		System.out.println("0. Create a group");
 		System.out.println("1. See groups");
 		System.out.println("2. Search groups by name");
 		System.out.println("3. View a group");
@@ -120,14 +119,25 @@ public class Prompt {
 
 	private void executeRootMenu() {
 		int inputChoice = this.keyboardIn.nextInt();
-		if (inputChoice == 1) {
+		
+		if (inputChoice == 0) {
+			//Create a group
+			currentGroup = createStudentGroup();
+			displayViewGroupMenu();
+			executeViewGroupMenu();
+		}
+		else if (inputChoice == 1) {
 			for (int i = 0; i < groups.size(); i++) {
 				System.out.println(groups.get(i).getGroupName());
 			}
 			displayRootMenu();
 			executeRootMenu();
 		} else if (inputChoice == 2) {
-			// Search groups by name
+			displaySearch();
+			executeSearch();
+			
+			displayRootMenu();
+			executeRootMenu();
 		} else if (inputChoice == 3) {
 			displaySelectGroupMenu();
 			executeSelectGroupMenu();
@@ -179,9 +189,10 @@ public class Prompt {
 
 		System.out.println("1. See group description");
 		System.out.println("2. View group owner");
-		System.out.println("3. View a group admins");
-		System.out.println("4. View a group members");
-
+		System.out.println("3. View group admins");
+		System.out.println("4. View group members");
+		System.out.println("5. Back to group menu");
+		System.out.println("6. Back to main menu");
 	}
 
 	private void executeViewGroupMenu() {
@@ -201,14 +212,41 @@ public class Prompt {
 		} else if (inputChoice == 3) {
 			System.out.println(this.currentGroup.getGroupName() + " Admins: ");
 			displayListOfStudents(this.currentGroup.getAdmins());
+			displayViewGroupMenu();
+			executeViewGroupMenu();
 
 		} else if (inputChoice == 4) {
-
+			System.out.println(this.currentGroup.getGroupName() + " Members: ");
+			displayListOfStudents(this.currentGroup.getMembers());
+			displayViewGroupMenu();
+			executeViewGroupMenu();
+		} else if (inputChoice == 5){
+			displaySelectGroupMenu();
+			executeSelectGroupMenu();
+		} else if (inputChoice == 6){
+			displayRootMenu();
+			executeRootMenu();
 		} else {
 			System.out.println("Please enter a valid option");
 			displayRootMenu();
 			executeRootMenu();
 		}
+	}
+	
+	private void displaySearch() {
+		System.out.println("Enter a search term for the group you want");
+	}
+	
+	private void executeSearch() {
+		String searchQuery = keyboardIn.next();
+		ArrayList<StudentGroup> searchResults = searchGroups(searchQuery);
+		if (searchResults.isEmpty()) {
+			System.out.println("No such group");
+		}
+		for (StudentGroup group : searchResults) {
+			System.out.println(group.getGroupName());
+		}
+		keyboardIn.nextLine();
 	}
 	
 	private void displayListOfStudents(ArrayList<Student> students) {
@@ -236,10 +274,24 @@ public class Prompt {
 		//TODO: Implement search
 		ArrayList<StudentGroup> results = new ArrayList<StudentGroup>();
 		for (StudentGroup group : this.groups) {
-			if (group.getGroupName().toLowerCase().equals(query.toLowerCase())) {
+			if (group.getGroupName().toLowerCase().contains(query.toLowerCase())) {
 				results.add(group);
 			}
 		}
 		return results;
+	}
+	
+	//create a new student group with current user as owner of group
+	private StudentGroup createStudentGroup() {
+		System.out.println("Please input a name for the group you would like to create:");
+		String groupName = this.keyboardIn.next();
+		System.out.println("Please input a description of this student group: ");
+		String groupDescription = this.keyboardIn.next();
+		keyboardIn.nextLine();
+		
+		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent);
+		this.addStudentGroupToList(newGroup);
+
+		return newGroup;
 	}
 }
