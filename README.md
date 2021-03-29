@@ -11,6 +11,7 @@
 - Students can be invited to groups
 - Students can be made admins of groups
 - Group owners can change ownership of groups
+- Groups will have a type (and later be organized/searched by type in Iteration 3) 
 
 ## Is there anything that you implemented but doesn't currently work?
 
