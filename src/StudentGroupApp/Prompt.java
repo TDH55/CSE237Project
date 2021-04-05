@@ -288,8 +288,20 @@ public class Prompt {
 		System.out.println("Please input a description of this student group: ");
 		String groupDescription = this.keyboardIn.next();
 		keyboardIn.nextLine();
-		
-		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, Tag.None);
+		System.out.println("Please select a tag for your group");
+		for (Tag tag : Tag.values()) {
+			System.out.print((tag.ordinal() + 1) + ". ");
+			System.out.println(tag.toString());
+		}
+		int tagChoice = this.keyboardIn.nextInt();
+		Tag groupTag = Tag.None;
+		for (Tag tag : Tag.values()) {
+			if((tag.ordinal() + 1) == tagChoice) {
+				groupTag = tag;
+			}
+		}
+
+		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, groupTag);
 		this.addStudentGroupToList(newGroup);
 
 		return newGroup;
