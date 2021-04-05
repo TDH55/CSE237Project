@@ -1,6 +1,7 @@
 package StudentGroupApp;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class StudentGroup {
     //Student group member variables
@@ -11,10 +12,11 @@ public class StudentGroup {
     private ArrayList<Student> members;
     private ArrayList<Student> invitedStudents;
     private boolean isPrivate;
+    private Tag tag;
     //TODO: add array list of events
 
     //public student group initializer
-    public StudentGroup(String groupName, String description, Student owner) {
+    public StudentGroup(String groupName, String description, Student owner, Tag tag) {
         this.groupName = groupName;
         this.description = description;
         this.owner = owner;
@@ -24,10 +26,11 @@ public class StudentGroup {
         this.members.add(owner);
         this.isPrivate = false;
         this.invitedStudents = null;
+        this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
 
     //private/public student group initializer
-    public StudentGroup(String groupName, String description, Student owner, boolean isPrivate) {
+    public StudentGroup(String groupName, String description, Student owner, boolean isPrivate, Tag tag) {
         this.groupName = groupName;
         this.description = description;
         this.owner = owner;
@@ -42,6 +45,7 @@ public class StudentGroup {
         } else {
             this.invitedStudents = null;
         }
+        this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
 
     public String getGroupName() {
@@ -64,6 +68,10 @@ public class StudentGroup {
         return this.members;
     }
 
+    public Tag getTag() {
+        return this.tag;
+    }
+
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
@@ -80,6 +88,10 @@ public class StudentGroup {
         if(!admins.contains(owner)) {
             members.add(owner);
         }
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
     }
 
     public void addMember(Student newMember) {

@@ -15,7 +15,7 @@ public class Prompt {
 		groups = new ArrayList<StudentGroup>();
 		keyboardIn = new Scanner(System.in);
 		currentStudent = new Student("", "", 0, "");
-		currentGroup = new StudentGroup("", "", null);
+		currentGroup = new StudentGroup("", "", null, Tag.None);
 	}
 
 	public static void main(String[] args) {
@@ -25,11 +25,11 @@ public class Prompt {
 		studentGroupPrompts.addStudentToList(testStudentOne);
 		studentGroupPrompts.addStudentToList(testStudentTwo);
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("CSE 237 Study Group", "A study group for CSE 237", testStudentOne));
+				new StudentGroup("CSE 237 Study Group", "A study group for CSE 237", testStudentOne, Tag.None));
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne));
+				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, Tag.None));
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne));
+				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.None));
 		studentGroupPrompts.runMenu();
 	}
 
@@ -289,7 +289,7 @@ public class Prompt {
 		String groupDescription = this.keyboardIn.next();
 		keyboardIn.nextLine();
 		
-		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent);
+		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, Tag.None);
 		this.addStudentGroupToList(newGroup);
 
 		return newGroup;
