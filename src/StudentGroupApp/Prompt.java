@@ -209,7 +209,8 @@ public class Prompt {
 			displayViewGroupMenu();
 			executeViewGroupMenu();
 		} else if (inputChoice == 2) {
-			System.out.println(this.currentGroup.getGroupName() + " Owner: " + this.currentGroup.getOwner());
+			Student owner = this.currentGroup.getOwner();
+			System.out.println(this.currentGroup.getGroupName() + " Owner: " + owner.getName());
 			System.out.println();
 			displayViewGroupMenu();
 			executeViewGroupMenu();
