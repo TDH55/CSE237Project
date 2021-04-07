@@ -30,7 +30,6 @@ public class Prompt {
 			new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, true, Tag.None));
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.None));
-		studentGroupPrompts.groups.get(1).inviteStudent(testStudentTwo);
 		studentGroupPrompts.runMenu();
 	}
 
@@ -320,6 +319,65 @@ public class Prompt {
 			executeViewGroupMenu();
 		}
 	}
+	
+	private void displayAdminMenu() {
+		System.out.println("Current group: " + this.currentGroup.getGroupName());
+		System.out.println();
+		System.out.println("1. Invite student to group");
+		System.out.println("2. Back to member menu");
+	}
+	
+	private void executeAdminMenu() {
+		int inputChoice = this.keyboardIn.nextInt();
+		if(inputChoice == 1) {
+			displayInviteStudentMenu();
+			executeInviteStudentMenu();
+		} else if(inputChoice == 2) {
+			System.out.println();
+			displayViewGroupMenu();
+			executeViewGroupMenu();
+		} else {
+			System.out.println("Please enter a valid option");
+			displayAdminMenu();
+			executeAdminMenu();
+		}
+	}
+	
+	private void displayInviteStudentMenu() {
+		System.out.println();
+		System.out.println("Please enter the name of the student you'd like to invite: ");
+	}
+	
+	private void executeInviteStudentMenu() {
+		String studentToInviteName = this.keyboardIn.next();
+		this.keyboardIn.nextLine();
+		Student studentToInvite = this.findStudentByName(studentToInviteName);
+		
+		if(studentToInvite != null) {
+			if(this.currentGroup.isInvitedStudent(studentToInvite)) {
+				System.out.println();
+				System.out.println("Student already invited.");
+				System.out.println();
+				displayAdminMenu();
+				executeAdminMenu();
+			} else {
+				this.currentGroup.inviteStudent(studentToInvite);
+				System.out.println();
+				System.out.println("Student successfully invited.");
+				System.out.println();
+				displayAdminMenu();
+				executeAdminMenu();
+			}
+			
+		} else {
+			System.out.println();
+			System.out.println("No student by that name found.");
+			System.out.println();
+			displayAdminMenu();
+			executeAdminMenu();
+		}
+	}
+	
 	
 	private void displaySearch() {
 		System.out.println("Enter a search term for the group you want");
