@@ -302,8 +302,8 @@ public class Prompt {
 			executeRootMenu();
 		} else {
 			System.out.println("Please enter a valid option");
-			displayRootMenu();
-			executeRootMenu();
+			displayViewGroupMenu();
+			executeViewGroupMenu();
 		}
 	}
 	
