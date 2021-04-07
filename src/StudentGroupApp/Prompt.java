@@ -65,7 +65,8 @@ public class Prompt {
 		Student studentToBeLoggedIn = this.findStudentByName(userName);
 
 		if (studentToBeLoggedIn != null) {
-			this.loginStudent(studentToBeLoggedIn);
+			this.executePasswordMenu(studentToBeLoggedIn);
+			
 		} else {
 			studentToBeLoggedIn = this.createStudent(userName);
 			this.loginStudent(studentToBeLoggedIn);
@@ -84,7 +85,19 @@ public class Prompt {
 
 		return null;
 	}
-
+	
+	private void executePasswordMenu(Student studentToBeLoggedIn) {
+		System.out.println("Please enter your password: ");
+		String password = this.keyboardIn.nextLine();
+		if(studentToBeLoggedIn.checkPassword(password)) {
+			this.loginStudent(studentToBeLoggedIn);
+		}
+		else {
+			System.out.println();
+			executePasswordMenu(studentToBeLoggedIn);
+		}
+	}
+	
 	private void loginStudent(Student student) {
 		int currentStudentIndex = this.students.indexOf(student);
 		this.setCurrentStudent(this.students.get(currentStudentIndex));
