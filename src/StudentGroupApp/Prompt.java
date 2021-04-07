@@ -191,19 +191,50 @@ public class Prompt {
 	private void displayViewGroupMenu() {
 		System.out.println("Current group: " + this.currentGroup.getGroupName());
 		System.out.println();
-
+		
+		ArrayList<Student> members = this.currentGroup.getMembers();
+		
+		if(members.contains(this.currentStudent)) {
+			System.out.println("0. Leave Group");
+		}
+		else {
+			if(!this.currentGroup.getIsPrivate()) {
+				System.out.println("0. Join Group");
+			}
+		}
 		System.out.println("1. See group description");
 		System.out.println("2. View group owner");
 		System.out.println("3. View group admins");
 		System.out.println("4. View group members");
 		System.out.println("5. Back to group menu");
 		System.out.println("6. Back to main menu");
+		
 	}
 
 	private void executeViewGroupMenu() {
 		int inputChoice = this.keyboardIn.nextInt();
-
-		if (inputChoice == 1) {
+		ArrayList<Student> members = this.currentGroup.getMembers();
+		
+		if (inputChoice == 0) {
+			if(members.contains(this.currentStudent)) {
+				this.currentGroup.removeMember(currentStudent);
+				System.out.println("Successfully removed. ");
+				System.out.println();
+				displayViewGroupMenu();
+				executeViewGroupMenu();
+			} else {
+				if(!this.currentGroup.getIsPrivate()) {
+					this.currentGroup.addMember(currentStudent);
+					System.out.println("Successfully added. ");
+					System.out.println();
+					displayViewGroupMenu();
+					executeViewGroupMenu();
+				} else {
+					displayViewGroupMenu();
+					executeViewGroupMenu();
+				}
+			}
+		} else if (inputChoice == 1) {
 			System.out.println(this.currentGroup.getDescription());
 			System.out.println();
 			displayViewGroupMenu();
