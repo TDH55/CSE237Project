@@ -156,7 +156,7 @@ public class Prompt {
 		}
 	}
 
-	private ArrayList<StudentGroup> getGroupByTag(Tag tag) {
+	public ArrayList<StudentGroup> getGroupByTag(Tag tag) {
 		ArrayList<StudentGroup> groupsWithTag = new ArrayList<>();
 		for (StudentGroup group : groups) {
 			if(group.getTag() == tag) {
