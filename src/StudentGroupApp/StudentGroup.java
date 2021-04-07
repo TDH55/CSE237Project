@@ -55,6 +55,10 @@ public class StudentGroup {
     public Student getOwner(){
         return this.owner;
     }
+    
+    public boolean getIsPrivate() {
+    	return this.isPrivate;
+    }
 
     public ArrayList<Student> getAdmins(){
         return this.admins;
@@ -81,7 +85,7 @@ public class StudentGroup {
             members.add(owner);
         }
     }
-
+    
     public void addMember(Student newMember) {
         if(!members.contains(newMember)){
             if(!isPrivate){
@@ -92,6 +96,14 @@ public class StudentGroup {
                 }
             }
         }
+    }
+    
+    public void removeMember(Student memberToRemove) {
+    	if(!this.members.contains(memberToRemove)) {
+    		return;
+    	} else {
+    		this.members.remove(memberToRemove);
+    	}
     }
 
     public void addAdmin(Student student) {
