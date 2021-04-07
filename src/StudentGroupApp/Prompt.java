@@ -27,9 +27,10 @@ public class Prompt {
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("CSE 237 Study Group", "A study group for CSE 237", testStudentOne));
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne));
+				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, true));
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne));
+		studentGroupPrompts.groups.get(1).inviteStudent(testStudentTwo);
 		studentGroupPrompts.runMenu();
 	}
 
@@ -200,6 +201,10 @@ public class Prompt {
 		else {
 			if(!this.currentGroup.getIsPrivate()) {
 				System.out.println("0. Join Group");
+			} else {
+				if(this.currentGroup.isInvitedStudent(this.currentStudent)) {
+					System.out.println("0. Join Group");
+				}
 			}
 		}
 		System.out.println("1. See group description");
@@ -230,8 +235,17 @@ public class Prompt {
 					displayViewGroupMenu();
 					executeViewGroupMenu();
 				} else {
-					displayViewGroupMenu();
-					executeViewGroupMenu();
+					if(this.currentGroup.isInvitedStudent(this.currentStudent)) {
+						this.currentGroup.addMember(currentStudent);
+						System.out.println("Successfully added. ");
+						System.out.println();
+						displayViewGroupMenu();
+						executeViewGroupMenu();
+					}
+					else {
+						displayViewGroupMenu();
+						executeViewGroupMenu();
+					}
 				}
 			}
 		} else if (inputChoice == 1) {
