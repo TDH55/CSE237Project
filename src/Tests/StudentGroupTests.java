@@ -163,8 +163,8 @@ class StudentGroupTests {
 	@Test
 	void testIsAdmin() {
 		StudentGroup group = new StudentGroup("Group Name", "Description", owner, true, Tag.None);
-		assertTrue(group.isInvitedStudent(owner));
-		assertFalse(group.isInvitedStudent(firstGroupMember));
+		assertTrue(group.isAdmin(owner));
+		assertFalse(group.isAdmin(firstGroupMember));
 	}
 	
 }
