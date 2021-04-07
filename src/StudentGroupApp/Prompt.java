@@ -127,8 +127,8 @@ public class Prompt {
 			executeViewGroupMenu();
 		}
 		else if (inputChoice == 1) {
-			for (int i = 0; i < groups.size(); i++) {
-				System.out.println(groups.get(i).getGroupName());
+			for (StudentGroup group : groups) {
+				System.out.println(group.getGroupName());
 			}
 			displayRootMenu();
 			executeRootMenu();
@@ -154,6 +154,16 @@ public class Prompt {
 			displayRootMenu();
 			executeRootMenu();
 		}
+	}
+
+	private ArrayList<StudentGroup> getGroupByTag(Tag tag) {
+		ArrayList<StudentGroup> groupsWithTag = new ArrayList<>();
+		for (StudentGroup group : groups) {
+			if(group.getTag() == tag) {
+				groupsWithTag.add(group);
+			}
+		}
+		return groupsWithTag;
 	}
 
 	private void displaySelectGroupMenu() {
