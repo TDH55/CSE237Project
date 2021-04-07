@@ -15,7 +15,7 @@ public class Prompt {
 		groups = new ArrayList<StudentGroup>();
 		keyboardIn = new Scanner(System.in);
 		currentStudent = new Student("", "", 0, "");
-		currentGroup = new StudentGroup("", "", null);
+		currentGroup = new StudentGroup("", "", null, Tag.None);
 	}
 
 	public static void main(String[] args) {
@@ -25,12 +25,11 @@ public class Prompt {
 		studentGroupPrompts.addStudentToList(testStudentOne);
 		studentGroupPrompts.addStudentToList(testStudentTwo);
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("CSE 237 Study Group", "A study group for CSE 237", testStudentOne));
+				new StudentGroup("CSE 237 Study Group", "A study group for CSE 237", testStudentOne, Tag.None));
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, true));
+			new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, Tag.None));
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne));
-		studentGroupPrompts.groups.get(1).inviteStudent(testStudentTwo);
+				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.None));
 		studentGroupPrompts.runMenu();
 	}
 
@@ -133,8 +132,8 @@ public class Prompt {
 			executeViewGroupMenu();
 		}
 		else if (inputChoice == 1) {
-			for (int i = 0; i < groups.size(); i++) {
-				System.out.println(groups.get(i).getGroupName());
+			for (StudentGroup group : groups) {
+				System.out.println(group.getGroupName());
 			}
 			displayRootMenu();
 			executeRootMenu();
@@ -160,6 +159,16 @@ public class Prompt {
 			displayRootMenu();
 			executeRootMenu();
 		}
+	}
+
+	public ArrayList<StudentGroup> getGroupByTag(Tag tag) {
+		ArrayList<StudentGroup> groupsWithTag = new ArrayList<>();
+		for (StudentGroup group : groups) {
+			if(group.getTag() == tag) {
+				groupsWithTag.add(group);
+			}
+		}
+		return groupsWithTag;
 	}
 
 	private void displaySelectGroupMenu() {
@@ -339,9 +348,23 @@ public class Prompt {
 		System.out.println("Please input a name for the group you would like to create:");
 		String groupName = this.keyboardIn.nextLine();
 		System.out.println("Please input a description of this student group: ");
-		String groupDescription = this.keyboardIn.nextLine();
-		
-		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent);
+		String groupDescription = this.keyboardIn.next();
+		keyboardIn.nextLine();
+		System.out.println("Please select a tag for your group");
+		for (Tag tag : Tag.values()) {
+			System.out.print((tag.ordinal() + 1) + ". ");
+			System.out.println(tag.toString());
+		}
+		int tagChoice = this.keyboardIn.nextInt();
+		Tag groupTag = Tag.None;
+		for (Tag tag : Tag.values()) {
+			if((tag.ordinal() + 1) == tagChoice) {
+				groupTag = tag;
+			}
+		}
+
+		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, groupTag);
+
 		this.addStudentGroupToList(newGroup);
 
 		return newGroup;
