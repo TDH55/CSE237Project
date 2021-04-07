@@ -50,6 +50,13 @@ class StudentGroupTests {
 		memberList.add(owner);
 		assertEquals(group.getMembers(), memberList);
 	}
+	
+	@Test
+	void testGetIsPrivate() {
+		boolean isPrivate = true;
+		StudentGroup group = new StudentGroup("Group name", "Group description", owner, isPrivate);
+		assertEquals(group.getIsPrivate(), isPrivate);
+	}
 
 	@Test
 	void testSetGroupName(){
@@ -74,6 +81,8 @@ class StudentGroupTests {
 		group.setOwner(newOwner);
 		assertEquals(group.getOwner(), newOwner);
 	}
+	
+	
 
 	@Test
 	void testAddGroupMembers(){
@@ -85,6 +94,18 @@ class StudentGroupTests {
 		groupMembers.add(firstGroupMember);
 		groupMembers.add(secondGroupMember);
 		assertEquals(group.getMembers(), groupMembers);
+	}
+	
+	@Test
+	void testRemoveGroupMembers() {
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner);
+		group.addMember(firstGroupMember);
+		group.addMember(secondGroupMember);
+		ArrayList<Student> groupMembers = group.getMembers();
+		assertEquals(3, groupMembers.size());
+		group.removeMember(secondGroupMember);
+		assertEquals(2, groupMembers.size());
+		assertEquals(groupMembers.contains(secondGroupMember), false);
 	}
 
 	@Test

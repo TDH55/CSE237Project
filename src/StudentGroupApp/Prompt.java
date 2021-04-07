@@ -61,8 +61,7 @@ public class Prompt {
 
 	private void executeLoginMenu() {
 
-		String userName = this.keyboardIn.next();
-		keyboardIn.hasNextLine();
+		String userName = this.keyboardIn.nextLine();
 		Student studentToBeLoggedIn = this.findStudentByName(userName);
 
 		if (studentToBeLoggedIn != null) {
@@ -94,10 +93,14 @@ public class Prompt {
 	private Student createStudent(String name) {
 		System.out.println("Please input an email for the student: ");
 		String email = this.keyboardIn.next();
+		this.keyboardIn.nextLine();
 		System.out.println("Please input a class year for the student: ");
 		int classYear = this.keyboardIn.nextInt();
+		this.keyboardIn.nextLine();
 		System.out.println("Please input a password for the student: ");
 		String password = this.keyboardIn.next();
+		this.keyboardIn.nextLine();
+
 
 		Student newStudent = new Student(name, email, classYear, password);
 		this.addStudentToList(newStudent);
@@ -119,6 +122,8 @@ public class Prompt {
 
 	private void executeRootMenu() {
 		int inputChoice = this.keyboardIn.nextInt();
+		this.keyboardIn.nextLine();
+
 		
 		if (inputChoice == 0) {
 			//Create a group
@@ -196,25 +201,57 @@ public class Prompt {
 	private void displayViewGroupMenu() {
 		System.out.println("Current group: " + this.currentGroup.getGroupName());
 		System.out.println();
-
+		
+		ArrayList<Student> members = this.currentGroup.getMembers();
+		
+		if(members.contains(this.currentStudent)) {
+			System.out.println("0. Leave Group");
+		}
+		else {
+			if(!this.currentGroup.getIsPrivate()) {
+				System.out.println("0. Join Group");
+			}
+		}
 		System.out.println("1. See group description");
 		System.out.println("2. View group owner");
 		System.out.println("3. View group admins");
 		System.out.println("4. View group members");
 		System.out.println("5. Back to group menu");
 		System.out.println("6. Back to main menu");
+		
 	}
 
 	private void executeViewGroupMenu() {
 		int inputChoice = this.keyboardIn.nextInt();
-
-		if (inputChoice == 1) {
+		ArrayList<Student> members = this.currentGroup.getMembers();
+		
+		if (inputChoice == 0) {
+			if(members.contains(this.currentStudent)) {
+				this.currentGroup.removeMember(currentStudent);
+				System.out.println("Successfully removed. ");
+				System.out.println();
+				displayViewGroupMenu();
+				executeViewGroupMenu();
+			} else {
+				if(!this.currentGroup.getIsPrivate()) {
+					this.currentGroup.addMember(currentStudent);
+					System.out.println("Successfully added. ");
+					System.out.println();
+					displayViewGroupMenu();
+					executeViewGroupMenu();
+				} else {
+					displayViewGroupMenu();
+					executeViewGroupMenu();
+				}
+			}
+		} else if (inputChoice == 1) {
 			System.out.println(this.currentGroup.getDescription());
 			System.out.println();
 			displayViewGroupMenu();
 			executeViewGroupMenu();
 		} else if (inputChoice == 2) {
-			System.out.println(this.currentGroup.getGroupName() + " Owner: " + this.currentGroup.getOwner());
+			Student owner = this.currentGroup.getOwner();
+			System.out.println(this.currentGroup.getGroupName() + " Owner: " + owner.getName());
 			System.out.println();
 			displayViewGroupMenu();
 			executeViewGroupMenu();
@@ -248,7 +285,7 @@ public class Prompt {
 	}
 	
 	private void executeSearch() {
-		String searchQuery = keyboardIn.next();
+		String searchQuery = keyboardIn.nextLine();
 		ArrayList<StudentGroup> searchResults = searchGroups(searchQuery);
 		if (searchResults.isEmpty()) {
 			System.out.println("No such group");
@@ -256,7 +293,6 @@ public class Prompt {
 		for (StudentGroup group : searchResults) {
 			System.out.println(group.getGroupName());
 		}
-		keyboardIn.nextLine();
 	}
 	
 	private void displayListOfStudents(ArrayList<Student> students) {
@@ -267,13 +303,16 @@ public class Prompt {
 
 	private void createStudent() {
 		System.out.println("Please input a name for the student: ");
-		String name = this.keyboardIn.next();
+		String name = this.keyboardIn.nextLine();
 		System.out.println("Please input an email for the student: ");
 		String email = this.keyboardIn.next();
+		this.keyboardIn.nextLine();
 		System.out.println("Please input a class year for the student: ");
 		int classYear = this.keyboardIn.nextInt();
+		this.keyboardIn.nextLine();
 		System.out.println("Please input a password for the student: ");
 		String password = this.keyboardIn.next();
+		this.keyboardIn.nextLine();
 
 		Student newStudent = new Student(name, email, classYear, password);
 		this.addStudentToList(newStudent);
@@ -294,7 +333,7 @@ public class Prompt {
 	//create a new student group with current user as owner of group
 	private StudentGroup createStudentGroup() {
 		System.out.println("Please input a name for the group you would like to create:");
-		String groupName = this.keyboardIn.next();
+		String groupName = this.keyboardIn.nextLine();
 		System.out.println("Please input a description of this student group: ");
 		String groupDescription = this.keyboardIn.next();
 		keyboardIn.nextLine();
@@ -312,6 +351,7 @@ public class Prompt {
 		}
 
 		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, groupTag);
+
 		this.addStudentGroupToList(newGroup);
 
 		return newGroup;
