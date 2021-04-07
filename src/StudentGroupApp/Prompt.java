@@ -27,9 +27,10 @@ public class Prompt {
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("CSE 237 Study Group", "A study group for CSE 237", testStudentOne, Tag.None));
 		studentGroupPrompts.addStudentGroupToList(
-			new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, Tag.None));
+			new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, true, Tag.None));
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.None));
+		studentGroupPrompts.groups.get(1).inviteStudent(testStudentTwo);
 		studentGroupPrompts.runMenu();
 	}
 
