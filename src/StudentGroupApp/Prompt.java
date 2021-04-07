@@ -271,8 +271,8 @@ public class Prompt {
 					}
 					else {
 						System.out.println("Please enter a valid option");
-						displayRootMenu();
-						executeRootMenu();
+						displayViewGroupMenu();
+						executeViewGroupMenu();
 					}
 				}
 			}
@@ -311,8 +311,8 @@ public class Prompt {
 				executeAdminMenu();
 			} else {
 				System.out.println("Please enter a valid option");
-				displayRootMenu();
-				executeRootMenu();
+				displayViewGroupMenu();
+				executeViewGroupMenu();
 			}
 		} else {
 			System.out.println("Please enter a valid option");
