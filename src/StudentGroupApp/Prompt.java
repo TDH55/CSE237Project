@@ -237,6 +237,10 @@ public class Prompt {
 		System.out.println("5. Back to group menu");
 		System.out.println("6. Back to main menu");
 		
+		if(this.currentGroup.isAdmin(currentStudent)) {
+			System.out.println("7. View admin options");
+		}
+		
 	}
 
 	private void executeViewGroupMenu() {
@@ -266,8 +270,9 @@ public class Prompt {
 						executeViewGroupMenu();
 					}
 					else {
-						displayViewGroupMenu();
-						executeViewGroupMenu();
+						System.out.println("Please enter a valid option");
+						displayRootMenu();
+						executeRootMenu();
 					}
 				}
 			}
@@ -300,6 +305,15 @@ public class Prompt {
 		} else if (inputChoice == 6){
 			displayRootMenu();
 			executeRootMenu();
+		} else if (inputChoice == 7) {
+			if(this.currentGroup.isAdmin(currentStudent)) {
+				displayAdminMenu();
+				executeAdminMenu();
+			} else {
+				System.out.println("Please enter a valid option");
+				displayRootMenu();
+				executeRootMenu();
+			}
 		} else {
 			System.out.println("Please enter a valid option");
 			displayRootMenu();
