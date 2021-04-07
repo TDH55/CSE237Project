@@ -151,4 +151,15 @@ class StudentGroupTests {
 		adminList.add(secondGroupMember);
 		assertEquals(group.getAdmins(), adminList);
 	}
+	
+	@Test
+	void testIsInvitedStudent() {
+		boolean answer = true;
+		boolean isInvitedStudent;
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner, true, Tag.None);
+		group.inviteStudent(firstGroupMember);
+		isInvitedStudent = group.isInvitedStudent(firstGroupMember);
+		assertEquals(answer, isInvitedStudent);
+	}
+	
 }
