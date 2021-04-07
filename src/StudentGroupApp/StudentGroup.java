@@ -86,10 +86,6 @@ public class StudentGroup {
         }
     }
     
-    public void setIsPrivate(boolean isPrivate) {
-    	this.isPrivate = isPrivate;
-    }
-    
     public void addMember(Student newMember) {
         if(!members.contains(newMember)){
             if(!isPrivate){
