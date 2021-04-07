@@ -54,7 +54,7 @@ class StudentGroupTests {
 	@Test
 	void testGetIsPrivate() {
 		boolean isPrivate = true;
-		StudentGroup group = new StudentGroup("Group name", "Group description", owner, isPrivate);
+		StudentGroup group = new StudentGroup("Group name", "Group description", owner, isPrivate, Tag.None);
 		assertEquals(group.getIsPrivate(), isPrivate);
 	}
 
@@ -98,7 +98,7 @@ class StudentGroupTests {
 	
 	@Test
 	void testRemoveGroupMembers() {
-		StudentGroup group = new StudentGroup("Group Name", "Description", owner);
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner, Tag.None);
 		group.addMember(firstGroupMember);
 		group.addMember(secondGroupMember);
 		ArrayList<Student> groupMembers = group.getMembers();
