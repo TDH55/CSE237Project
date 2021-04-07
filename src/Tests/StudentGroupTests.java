@@ -154,12 +154,10 @@ class StudentGroupTests {
 	
 	@Test
 	void testIsInvitedStudent() {
-		boolean answer = true;
-		boolean isInvitedStudent;
 		StudentGroup group = new StudentGroup("Group Name", "Description", owner, true, Tag.None);
 		group.inviteStudent(firstGroupMember);
-		isInvitedStudent = group.isInvitedStudent(firstGroupMember);
-		assertEquals(answer, isInvitedStudent);
+		assertTrue(group.isInvitedStudent(firstGroupMember));
+		assertFalse(group.isInvitedStudent(secondGroupMember));
 	}
 	
 }
