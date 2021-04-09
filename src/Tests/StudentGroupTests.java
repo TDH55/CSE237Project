@@ -160,4 +160,11 @@ class StudentGroupTests {
 		assertFalse(group.isInvitedStudent(secondGroupMember));
 	}
 	
+	@Test
+	void testIsAdmin() {
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner, true, Tag.None);
+		assertTrue(group.isAdmin(owner));
+		assertFalse(group.isAdmin(firstGroupMember));
+	}
+	
 }

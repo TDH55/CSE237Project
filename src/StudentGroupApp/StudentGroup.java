@@ -137,4 +137,8 @@ public class StudentGroup {
     public boolean isInvitedStudent(Student student) {
     	return invitedStudents.contains(student);
     }
+    
+    public boolean isAdmin(Student student) {
+    	return admins.contains(student);
+    }
 }
