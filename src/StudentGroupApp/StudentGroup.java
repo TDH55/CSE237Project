@@ -133,4 +133,8 @@ public class StudentGroup {
     public void kickStudent(Student student) {
         members.remove(student);
     }
+    
+    public boolean isInvitedStudent(Student student) {
+    	return invitedStudents.contains(student);
+    }
 }
