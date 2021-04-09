@@ -28,6 +28,7 @@ public class Prompt {
 				new StudentGroup("CSE 237 Study Group", "A study group for CSE 237", testStudentOne, Tag.Academic));
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, Tag.Recreational));
+
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.Recreational));
 		studentGroupPrompts.runMenu();
@@ -227,6 +228,10 @@ public class Prompt {
 		else {
 			if(!this.currentGroup.getIsPrivate()) {
 				System.out.println("0. Join Group");
+			} else {
+				if(this.currentGroup.isInvitedStudent(this.currentStudent)) {
+					System.out.println("0. Join Group");
+				}
 			}
 		}
 		System.out.println("1. See group description");
@@ -235,6 +240,10 @@ public class Prompt {
 		System.out.println("4. View group members");
 		System.out.println("5. Back to group menu");
 		System.out.println("6. Back to main menu");
+		
+		if(this.currentGroup.isAdmin(currentStudent)) {
+			System.out.println("7. View admin options");
+		}
 		
 	}
 
@@ -257,8 +266,18 @@ public class Prompt {
 					displayViewGroupMenu();
 					executeViewGroupMenu();
 				} else {
-					displayViewGroupMenu();
-					executeViewGroupMenu();
+					if(this.currentGroup.isInvitedStudent(this.currentStudent)) {
+						this.currentGroup.addMember(currentStudent);
+						System.out.println("Successfully added. ");
+						System.out.println();
+						displayViewGroupMenu();
+						executeViewGroupMenu();
+					}
+					else {
+						System.out.println("Please enter a valid option");
+						displayViewGroupMenu();
+						executeViewGroupMenu();
+					}
 				}
 			}
 		} else if (inputChoice == 1) {
@@ -288,7 +307,18 @@ public class Prompt {
 			displaySelectGroupMenu();
 			executeSelectGroupMenu();
 		} else if (inputChoice == 6){
+
 			rootMenu();
+		} else if (inputChoice == 7) {
+			if(this.currentGroup.isAdmin(currentStudent)) {
+				displayAdminMenu();
+				executeAdminMenu();
+			} else {
+				System.out.println("Please enter a valid option");
+				displayViewGroupMenu();
+				executeViewGroupMenu();
+			}
+
 		} else {
 			System.out.println("Please enter a valid option");
 			displayViewGroupMenu();
@@ -317,6 +347,65 @@ public class Prompt {
 		}
 	}
 
+	
+	private void displayAdminMenu() {
+		System.out.println("Current group: " + this.currentGroup.getGroupName());
+		System.out.println();
+		System.out.println("1. Invite student to group");
+		System.out.println("2. Back to member menu");
+	}
+	
+	private void executeAdminMenu() {
+		int inputChoice = this.keyboardIn.nextInt();
+		if(inputChoice == 1) {
+			displayInviteStudentMenu();
+			executeInviteStudentMenu();
+		} else if(inputChoice == 2) {
+			System.out.println();
+			displayViewGroupMenu();
+			executeViewGroupMenu();
+		} else {
+			System.out.println("Please enter a valid option");
+			displayAdminMenu();
+			executeAdminMenu();
+		}
+	}
+	
+	private void displayInviteStudentMenu() {
+		System.out.println();
+		System.out.println("Please enter the name of the student you'd like to invite: ");
+	}
+	
+	private void executeInviteStudentMenu() {
+		String studentToInviteName = this.keyboardIn.next();
+		this.keyboardIn.nextLine();
+		Student studentToInvite = this.findStudentByName(studentToInviteName);
+		
+		if(studentToInvite != null) {
+			if(this.currentGroup.isInvitedStudent(studentToInvite)) {
+				System.out.println();
+				System.out.println("Student already invited.");
+				System.out.println();
+				displayAdminMenu();
+				executeAdminMenu();
+			} else {
+				this.currentGroup.inviteStudent(studentToInvite);
+				System.out.println();
+				System.out.println("Student successfully invited.");
+				System.out.println();
+				displayAdminMenu();
+				executeAdminMenu();
+			}
+			
+		} else {
+			System.out.println();
+			System.out.println("No student by that name found.");
+			System.out.println();
+			displayAdminMenu();
+			executeAdminMenu();
+		}
+	}
+	
 	
 	private void displaySearch() {
 		System.out.println("Enter a search term for the group you want");
