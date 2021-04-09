@@ -352,7 +352,8 @@ public class Prompt {
 		System.out.println("Current group: " + this.currentGroup.getGroupName());
 		System.out.println();
 		System.out.println("1. Invite student to group");
-		System.out.println("2. Back to member menu");
+		System.out.println("2. Change group tag");
+		System.out.println("3. Back to member menu");
 	}
 	
 	private void executeAdminMenu() {
@@ -360,7 +361,11 @@ public class Prompt {
 		if(inputChoice == 1) {
 			displayInviteStudentMenu();
 			executeInviteStudentMenu();
-		} else if(inputChoice == 2) {
+		} else if (inputChoice == 2) {
+			changeTagMenu();
+			displayAdminMenu();
+			executeAdminMenu();
+		} else if(inputChoice == 3) {
 			System.out.println();
 			displayViewGroupMenu();
 			executeViewGroupMenu();
@@ -405,8 +410,21 @@ public class Prompt {
 			executeAdminMenu();
 		}
 	}
-	
-	
+
+	private void changeTagMenu() {
+		printTagChoices();
+		int tagChoice = this.keyboardIn.nextInt();
+
+		Tag groupTag = Tag.None;
+		for (Tag tag : Tag.values()) {
+			if((tag.ordinal() + 1) == tagChoice) {
+				groupTag = tag;
+			}
+		}
+
+		this.currentGroup.setTag(groupTag);
+	}
+
 	private void displaySearch() {
 		System.out.println("Enter a search term for the group you want");
 	}
