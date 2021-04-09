@@ -25,11 +25,11 @@ public class Prompt {
 		studentGroupPrompts.addStudentToList(testStudentOne);
 		studentGroupPrompts.addStudentToList(testStudentTwo);
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("CSE 237 Study Group", "A study group for CSE 237", testStudentOne, Tag.None));
+				new StudentGroup("CSE 237 Study Group", "A study group for CSE 237", testStudentOne, Tag.Academic));
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, Tag.None));
+				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, Tag.Recreational));
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.None));
+				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.Recreational));
 		studentGroupPrompts.runMenu();
 	}
 
@@ -50,8 +50,7 @@ public class Prompt {
 		this.displayLoginMenu();
 		executeLoginMenu();
 
-		displayRootMenu();
-		executeRootMenu();
+		rootMenu();
 
 	}
 
@@ -127,10 +126,11 @@ public class Prompt {
 
 		System.out.println("0. Create a group");
 		System.out.println("1. See groups");
-		System.out.println("2. Search groups by name");
-		System.out.println("3. View a group");
-		System.out.println("4. Log out");
-		System.out.println("5. Quit");
+		System.out.println("2. See groups by tags");
+		System.out.println("3. Search groups by name");
+		System.out.println("4. View a group");
+		System.out.println("5. Log out");
+		System.out.println("6. Quit");
 	}
 
 	private void executeRootMenu() {
@@ -148,30 +148,35 @@ public class Prompt {
 			for (StudentGroup group : groups) {
 				System.out.println(group.getGroupName());
 			}
-			displayRootMenu();
-			executeRootMenu();
+			rootMenu();
 		} else if (inputChoice == 2) {
+			selectTagMenu();
+
+			rootMenu();
+		} else if (inputChoice == 3) {
 			displaySearch();
 			executeSearch();
-			
-			displayRootMenu();
-			executeRootMenu();
-		} else if (inputChoice == 3) {
+
+			rootMenu();
+		} else if (inputChoice == 4) {
 			displaySelectGroupMenu();
 			executeSelectGroupMenu();
-		} else if (inputChoice == 4) {
+		} else if (inputChoice == 5) {
 			this.displayLoginMenu();
 			executeLoginMenu();
 
-			displayRootMenu();
-			executeRootMenu();
-		} else if (inputChoice == 5) {
+			rootMenu();
+		} else if (inputChoice == 6) {
 			return;
 		} else {
 			System.out.println("Please enter a valid option");
-			displayRootMenu();
-			executeRootMenu();
+			rootMenu();
 		}
+	}
+
+	private void rootMenu() {
+		displayRootMenu();
+		executeRootMenu();
 	}
 
 	public ArrayList<StudentGroup> getGroupByTag(Tag tag) {
@@ -196,8 +201,7 @@ public class Prompt {
 	private void executeSelectGroupMenu() {
 		int inputChoice = this.keyboardIn.nextInt();
 		if (inputChoice == -1) {
-			displayRootMenu();
-			executeRootMenu();
+			rootMenu();
 		} else if (inputChoice >= this.groups.size() || inputChoice < -1) {
 			System.out.println("Please enter a valid option");
 			System.out.println();
@@ -284,14 +288,35 @@ public class Prompt {
 			displaySelectGroupMenu();
 			executeSelectGroupMenu();
 		} else if (inputChoice == 6){
-			displayRootMenu();
-			executeRootMenu();
+			rootMenu();
 		} else {
 			System.out.println("Please enter a valid option");
 			displayViewGroupMenu();
 			executeViewGroupMenu();
 		}
 	}
+
+	private void selectTagMenu() {
+		System.out.println("Enter the tag you would like to see groups for");
+		printTagChoices();
+		int tagChoice = this.keyboardIn.nextInt();
+		Tag groupTag = Tag.None;
+		for (Tag tag : Tag.values()) {
+			if((tag.ordinal() + 1) == tagChoice) {
+				groupTag = tag;
+			}
+		}
+		//TODO: Allow users to view group from here? (next iteration?)
+		ArrayList<StudentGroup> groupsToDisplay = getGroupByTag(groupTag);
+		if(groupsToDisplay.isEmpty()) {
+			System.out.println("No groups with this tag");
+		} else {
+			for (StudentGroup group : groupsToDisplay) {
+				System.out.println(group.getGroupName());
+			}
+		}
+	}
+
 	
 	private void displaySearch() {
 		System.out.println("Enter a search term for the group you want");
@@ -351,10 +376,8 @@ public class Prompt {
 		String groupDescription = this.keyboardIn.next();
 		keyboardIn.nextLine();
 		System.out.println("Please select a tag for your group");
-		for (Tag tag : Tag.values()) {
-			System.out.print((tag.ordinal() + 1) + ". ");
-			System.out.println(tag.toString());
-		}
+		printTagChoices();
+		//TODO: refactor this into a function, it is used multiple times
 		int tagChoice = this.keyboardIn.nextInt();
 		Tag groupTag = Tag.None;
 		for (Tag tag : Tag.values()) {
@@ -369,4 +392,13 @@ public class Prompt {
 
 		return newGroup;
 	}
+
+	private void printTagChoices() {
+		for (Tag tag : Tag.values()) {
+			System.out.print((tag.ordinal() + 1) + ". ");
+			System.out.println(tag.toString());
+		}
+	}
 }
+
+
