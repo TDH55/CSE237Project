@@ -19,7 +19,10 @@ public class Prompt {
 	}
 
 	public static void main(String[] args) {
+		
 		Prompt studentGroupPrompts = new Prompt();
+		
+		//Creating test students and groups
 		Student testStudentOne = new Student("Kedar", "kedar.kedar@wustl.edu", 2021, "password");
 		Student testStudentTwo = new Student("Karl", "karl@outlook.com", 2022, "secret");
 		studentGroupPrompts.addStudentToList(testStudentOne);
@@ -28,9 +31,10 @@ public class Prompt {
 				new StudentGroup("CSE 237 Study Group", "A study group for CSE 237", testStudentOne, Tag.Academic));
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, Tag.Recreational));
-
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.Recreational));
+		
+		
 		studentGroupPrompts.runMenu();
 	}
 
@@ -38,7 +42,7 @@ public class Prompt {
 		this.students.add(studentToAdd);
 	}
 
-	//I changed this to public to write the tests for search - Taylor
+	// I changed this to public to write the tests for search - Taylor
 	public void addStudentGroupToList(StudentGroup groupToAdd) {
 		this.groups.add(groupToAdd);
 	}
@@ -48,11 +52,8 @@ public class Prompt {
 	}
 
 	private void runMenu() {
-		this.displayLoginMenu();
-		executeLoginMenu();
-
+		loginMenu();
 		rootMenu();
-
 	}
 
 	private void displayLoginMenu() {
@@ -64,6 +65,8 @@ public class Prompt {
 		String userName = this.keyboardIn.nextLine();
 		Student studentToBeLoggedIn = this.findStudentByName(userName);
 
+		// If the student is already in the system, ask for their password,
+		// otherwise create a new student
 		if (studentToBeLoggedIn != null) {
 			this.executePasswordMenu(studentToBeLoggedIn);
 			
@@ -87,6 +90,7 @@ public class Prompt {
 	}
 	
 	private void executePasswordMenu(Student studentToBeLoggedIn) {
+		// Check user input against the student's password, call recursively if wrong
 		System.out.println("Please enter your password: ");
 		String password = this.keyboardIn.nextLine();
 		if(studentToBeLoggedIn.checkPassword(password)) {
@@ -140,39 +144,62 @@ public class Prompt {
 
 		
 		if (inputChoice == 0) {
-			//Create a group
+			// Create a group
 			currentGroup = createStudentGroup();
-			displayViewGroupMenu();
-			executeViewGroupMenu();
+			viewGroupMenu();
 		}
 		else if (inputChoice == 1) {
-			for (StudentGroup group : groups) {
-				System.out.println(group.getGroupName());
-			}
+			// See groups
+			printAllGroups();
 			rootMenu();
 		} else if (inputChoice == 2) {
+			// See groups by tag
 			selectTagMenu();
-
 			rootMenu();
 		} else if (inputChoice == 3) {
-			displaySearch();
-			executeSearch();
-
+			// Search groups by name
+			searchMenu();
 			rootMenu();
 		} else if (inputChoice == 4) {
-			displaySelectGroupMenu();
-			executeSelectGroupMenu();
+			// View a group
+			selectGroupMenu();
 		} else if (inputChoice == 5) {
-			this.displayLoginMenu();
-			executeLoginMenu();
-
+			// Log out
+			loginMenu();
 			rootMenu();
 		} else if (inputChoice == 6) {
+			// Quit
 			return;
 		} else {
 			System.out.println("Please enter a valid option");
 			rootMenu();
 		}
+	}
+
+	private void printAllGroups() {
+		for (StudentGroup group : groups) {
+			System.out.println(group.getGroupName());
+		}
+	}
+
+	private void loginMenu() {
+		displayLoginMenu();
+		executeLoginMenu();
+	}
+
+	private void searchMenu() {
+		displaySearch();
+		executeSearch();
+	}
+
+	private void selectGroupMenu() {
+		displaySelectGroupMenu();
+		executeSelectGroupMenu();
+	}
+
+	private void viewGroupMenu() {
+		displayViewGroupMenu();
+		executeViewGroupMenu();
 	}
 
 	private void rootMenu() {
@@ -201,17 +228,16 @@ public class Prompt {
 
 	private void executeSelectGroupMenu() {
 		int inputChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
 		if (inputChoice == -1) {
 			rootMenu();
 		} else if (inputChoice >= this.groups.size() || inputChoice < -1) {
 			System.out.println("Please enter a valid option");
 			System.out.println();
-			displaySelectGroupMenu();
-			executeSelectGroupMenu();
+			selectGroupMenu();
 		} else {
 			this.currentGroup = this.groups.get(inputChoice);
-			displayViewGroupMenu();
-			executeViewGroupMenu();
+			viewGroupMenu();
 		}
 
 	}
@@ -249,80 +275,78 @@ public class Prompt {
 
 	private void executeViewGroupMenu() {
 		int inputChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
 		ArrayList<Student> members = this.currentGroup.getMembers();
 		
 		if (inputChoice == 0) {
-			if(members.contains(this.currentStudent)) {
-				this.currentGroup.removeMember(currentStudent);
-				System.out.println("Successfully removed. ");
-				System.out.println();
-				displayViewGroupMenu();
-				executeViewGroupMenu();
-			} else {
-				if(!this.currentGroup.getIsPrivate()) {
-					this.currentGroup.addMember(currentStudent);
-					System.out.println("Successfully added. ");
-					System.out.println();
-					displayViewGroupMenu();
-					executeViewGroupMenu();
-				} else {
-					if(this.currentGroup.isInvitedStudent(this.currentStudent)) {
-						this.currentGroup.addMember(currentStudent);
-						System.out.println("Successfully added. ");
-						System.out.println();
-						displayViewGroupMenu();
-						executeViewGroupMenu();
-					}
-					else {
-						System.out.println("Please enter a valid option");
-						displayViewGroupMenu();
-						executeViewGroupMenu();
-					}
-				}
-			}
+			joinOrLeaveGroup(members);
 		} else if (inputChoice == 1) {
 			System.out.println(this.currentGroup.getDescription());
 			System.out.println();
-			displayViewGroupMenu();
-			executeViewGroupMenu();
+			viewGroupMenu();
 		} else if (inputChoice == 2) {
 			Student owner = this.currentGroup.getOwner();
 			System.out.println(this.currentGroup.getGroupName() + " Owner: " + owner.getName());
 			System.out.println();
-			displayViewGroupMenu();
-			executeViewGroupMenu();
+			viewGroupMenu();
 
 		} else if (inputChoice == 3) {
 			System.out.println(this.currentGroup.getGroupName() + " Admins: ");
 			displayListOfStudents(this.currentGroup.getAdmins());
-			displayViewGroupMenu();
-			executeViewGroupMenu();
+			viewGroupMenu();
 
 		} else if (inputChoice == 4) {
 			System.out.println(this.currentGroup.getGroupName() + " Members: ");
 			displayListOfStudents(this.currentGroup.getMembers());
-			displayViewGroupMenu();
-			executeViewGroupMenu();
+			viewGroupMenu();
 		} else if (inputChoice == 5){
-			displaySelectGroupMenu();
-			executeSelectGroupMenu();
+			selectGroupMenu();
 		} else if (inputChoice == 6){
 
 			rootMenu();
 		} else if (inputChoice == 7) {
-			if(this.currentGroup.isAdmin(currentStudent)) {
-				displayAdminMenu();
-				executeAdminMenu();
-			} else {
-				System.out.println("Please enter a valid option");
-				displayViewGroupMenu();
-				executeViewGroupMenu();
-			}
+			adminOrInvalid();
 
 		} else {
 			System.out.println("Please enter a valid option");
-			displayViewGroupMenu();
-			executeViewGroupMenu();
+			viewGroupMenu();
+		}
+	}
+
+	private void adminOrInvalid() {
+		if(this.currentGroup.isAdmin(currentStudent)) {
+			displayAdminMenu();
+			executeAdminMenu();
+		} else {
+			System.out.println("Please enter a valid option");
+			viewGroupMenu();
+		}
+	}
+
+	private void joinOrLeaveGroup(ArrayList<Student> members) {
+		if(members.contains(this.currentStudent)) {
+			this.currentGroup.removeMember(currentStudent);
+			System.out.println("Successfully removed. ");
+			System.out.println();
+			viewGroupMenu();
+		} else {
+			if(!this.currentGroup.getIsPrivate()) {
+				this.currentGroup.addMember(currentStudent);
+				System.out.println("Successfully added. ");
+				System.out.println();
+				viewGroupMenu();
+			} else {
+				if(this.currentGroup.isInvitedStudent(this.currentStudent)) {
+					this.currentGroup.addMember(currentStudent);
+					System.out.println("Successfully added. ");
+					System.out.println();
+					viewGroupMenu();
+				}
+				else {
+					System.out.println("Please enter a valid option");
+					viewGroupMenu();
+				}
+			}
 		}
 	}
 
@@ -330,6 +354,7 @@ public class Prompt {
 		System.out.println("Enter the tag you would like to see groups for");
 		printTagChoices();
 		int tagChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
 		Tag groupTag = Tag.None;
 		for (Tag tag : Tag.values()) {
 			if((tag.ordinal() + 1) == tagChoice) {
@@ -358,6 +383,7 @@ public class Prompt {
 	
 	private void executeAdminMenu() {
 		int inputChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
 		if(inputChoice == 1) {
 			displayInviteStudentMenu();
 			executeInviteStudentMenu();
@@ -367,8 +393,7 @@ public class Prompt {
 			executeAdminMenu();
 		} else if(inputChoice == 3) {
 			System.out.println();
-			displayViewGroupMenu();
-			executeViewGroupMenu();
+			viewGroupMenu();
 		} else {
 			System.out.println("Please enter a valid option");
 			displayAdminMenu();
@@ -413,16 +438,21 @@ public class Prompt {
 
 	private void changeTagMenu() {
 		printTagChoices();
-		int tagChoice = this.keyboardIn.nextInt();
+		Tag groupTag = chooseTag();
 
+		this.currentGroup.setTag(groupTag);
+	}
+
+	private Tag chooseTag() {
+		int tagChoice = keyboardIn.nextInt();
+		keyboardIn.nextLine();
 		Tag groupTag = Tag.None;
 		for (Tag tag : Tag.values()) {
 			if((tag.ordinal() + 1) == tagChoice) {
 				groupTag = tag;
 			}
 		}
-
-		this.currentGroup.setTag(groupTag);
+		return groupTag;
 	}
 
 	private void displaySearch() {
@@ -485,13 +515,7 @@ public class Prompt {
 		System.out.println("Please select a tag for your group");
 		printTagChoices();
 		//TODO: refactor this into a function, it is used multiple times
-		int tagChoice = this.keyboardIn.nextInt();
-		Tag groupTag = Tag.None;
-		for (Tag tag : Tag.values()) {
-			if((tag.ordinal() + 1) == tagChoice) {
-				groupTag = tag;
-			}
-		}
+		Tag groupTag = chooseTag();
 
 		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, groupTag);
 
