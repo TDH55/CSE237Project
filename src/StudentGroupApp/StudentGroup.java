@@ -1,6 +1,7 @@
 package StudentGroupApp;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class StudentGroup {
     //Student group member variables
@@ -11,10 +12,11 @@ public class StudentGroup {
     private ArrayList<Student> members;
     private ArrayList<Student> invitedStudents;
     private boolean isPrivate;
+    private Tag tag;
     //TODO: add array list of events
 
     //public student group initializer
-    public StudentGroup(String groupName, String description, Student owner) {
+    public StudentGroup(String groupName, String description, Student owner, Tag tag) {
         this.groupName = groupName;
         this.description = description;
         this.owner = owner;
@@ -24,10 +26,11 @@ public class StudentGroup {
         this.members.add(owner);
         this.isPrivate = false;
         this.invitedStudents = null;
+        this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
 
     //private/public student group initializer
-    public StudentGroup(String groupName, String description, Student owner, boolean isPrivate) {
+    public StudentGroup(String groupName, String description, Student owner, boolean isPrivate, Tag tag) {
         this.groupName = groupName;
         this.description = description;
         this.owner = owner;
@@ -42,6 +45,7 @@ public class StudentGroup {
         } else {
             this.invitedStudents = null;
         }
+        this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
 
     public String getGroupName() {
@@ -55,6 +59,10 @@ public class StudentGroup {
     public Student getOwner(){
         return this.owner;
     }
+    
+    public boolean getIsPrivate() {
+    	return this.isPrivate;
+    }
 
     public ArrayList<Student> getAdmins(){
         return this.admins;
@@ -62,6 +70,10 @@ public class StudentGroup {
 
     public ArrayList<Student> getMembers(){
         return this.members;
+    }
+
+    public Tag getTag() {
+        return this.tag;
     }
 
     public void setGroupName(String groupName) {
@@ -82,6 +94,10 @@ public class StudentGroup {
         }
     }
 
+    public void setTag(Tag tag) {
+        this.tag = tag;
+    }
+
     public void addMember(Student newMember) {
         if(!members.contains(newMember)){
             if(!isPrivate){
@@ -92,6 +108,14 @@ public class StudentGroup {
                 }
             }
         }
+    }
+    
+    public void removeMember(Student memberToRemove) {
+    	if(!this.members.contains(memberToRemove)) {
+    		return;
+    	} else {
+    		this.members.remove(memberToRemove);
+    	}
     }
 
     public void addAdmin(Student student) {
@@ -108,5 +132,13 @@ public class StudentGroup {
 
     public void kickStudent(Student student) {
         members.remove(student);
+    }
+    
+    public boolean isInvitedStudent(Student student) {
+    	return invitedStudents.contains(student);
+    }
+    
+    public boolean isAdmin(Student student) {
+    	return admins.contains(student);
     }
 }
