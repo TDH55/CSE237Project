@@ -510,11 +510,9 @@ public class Prompt {
 		System.out.println("Please input a name for the group you would like to create:");
 		String groupName = this.keyboardIn.nextLine();
 		System.out.println("Please input a description of this student group: ");
-		String groupDescription = this.keyboardIn.next();
-		keyboardIn.nextLine();
+		String groupDescription = this.keyboardIn.nextLine();
 		System.out.println("Please select a tag for your group");
 		printTagChoices();
-		//TODO: refactor this into a function, it is used multiple times
 		Tag groupTag = chooseTag();
 
 		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, groupTag);
