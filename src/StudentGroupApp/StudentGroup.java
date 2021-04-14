@@ -11,6 +11,7 @@ public class StudentGroup {
     private ArrayList<Student> admins;
     private ArrayList<Student> members;
     private ArrayList<Student> invitedStudents;
+    private ArrayList<Student> blacklistStudents;
     private boolean isPrivate;
     private Tag tag;
     //TODO: add array list of events
@@ -26,6 +27,7 @@ public class StudentGroup {
         this.members.add(owner);
         this.isPrivate = false;
         this.invitedStudents = null;
+        this.blacklistStudents = null;
         this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
 
@@ -42,8 +44,10 @@ public class StudentGroup {
         if (isPrivate) {
             this.invitedStudents = new ArrayList<Student>();
             this.invitedStudents.add(owner);
+            this.blacklistStudents = new ArrayList<Student>();
         } else {
             this.invitedStudents = null;
+            this.blacklistStudents = null;
         }
         this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
@@ -70,6 +74,10 @@ public class StudentGroup {
 
     public ArrayList<Student> getMembers(){
         return this.members;
+    }
+    
+    public ArrayList<Student> getDisallowedMembers(){
+    	return this.blacklistStudents;
     }
 
     public Tag getTag() {
@@ -110,6 +118,14 @@ public class StudentGroup {
         }
     }
     
+    public void disallowMember(Student newMember) {
+    	if (!blacklistStudents.contains(newMember)) {
+    		if(!isPrivate) {
+    			this.blacklistStudents.add(newMember);
+    		}
+    	}
+    }
+    
     public void removeMember(Student memberToRemove) {
     	if(!this.members.contains(memberToRemove)) {
     		return;
@@ -129,6 +145,12 @@ public class StudentGroup {
             invitedStudents.add(student);
         }
     }
+    
+    public void disallowStudent(Student student) {
+    	if (!blacklistStudents.contains(student)) {
+    		blacklistStudents.add(student);
+    	}
+    }
 
     public void kickStudent(Student student) {
         members.remove(student);
@@ -136,6 +158,10 @@ public class StudentGroup {
     
     public boolean isInvitedStudent(Student student) {
     	return invitedStudents.contains(student);
+    }
+    
+    public boolean isDisallowedStudent(Student student) {
+    	return blacklistStudents.contains(student);
     }
     
     public boolean isAdmin(Student student) {
