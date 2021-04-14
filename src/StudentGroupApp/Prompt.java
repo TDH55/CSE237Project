@@ -331,10 +331,16 @@ public class Prompt {
 			viewGroupMenu();
 		} else {
 			if(!this.currentGroup.getIsPrivate()) {
-				this.currentGroup.addMember(currentStudent);
-				System.out.println("Successfully added. ");
-				System.out.println();
-				viewGroupMenu();
+				if(this.currentGroup.isDisallowedStudent(this.currentStudent)) {
+					System.out.println("This member is not allowed in this group. Please enter a valid student");
+					System.out.println();
+					viewGroupMenu();
+				} else {
+					this.currentGroup.addMember(currentStudent);
+					System.out.println("Successfully added. ");
+					System.out.println();
+					viewGroupMenu();
+				}
 			} else {
 				if(this.currentGroup.isInvitedStudent(this.currentStudent)) {
 					this.currentGroup.addMember(currentStudent);
@@ -343,11 +349,9 @@ public class Prompt {
 					viewGroupMenu();
 				}
 				if(this.currentGroup.isDisallowedStudent(this.currentStudent)) {
-					this.currentGroup.disallowMember(currentStudent);
 					System.out.println("This member is not allowed in this group. Please enter a valid student");
 					System.out.println();
 					viewGroupMenu();
-					
 				}
 				else {
 					System.out.println("Please enter a valid option");
@@ -384,8 +388,9 @@ public class Prompt {
 		System.out.println("Current group: " + this.currentGroup.getGroupName());
 		System.out.println();
 		System.out.println("1. Invite student to group");
-		System.out.println("2. Change group tag");
-		System.out.println("3. Back to member menu");
+		System.out.println("2. Bar student from joining group");
+		System.out.println("3. Change group tag");
+		System.out.println("4. Back to member menu");
 	}
 	
 	private void executeAdminMenu() {
@@ -394,11 +399,14 @@ public class Prompt {
 		if(inputChoice == 1) {
 			displayInviteStudentMenu();
 			executeInviteStudentMenu();
-		} else if (inputChoice == 2) {
+		} else if(inputChoice == 2) {
+			displayDisallowedStudentMenu();
+			executeDisallowStudentMenu();
+		} else if (inputChoice == 3) {
 			changeTagMenu();
 			displayAdminMenu();
 			executeAdminMenu();
-		} else if(inputChoice == 3) {
+		} else if(inputChoice == 4) {
 			System.out.println();
 			viewGroupMenu();
 		} else {

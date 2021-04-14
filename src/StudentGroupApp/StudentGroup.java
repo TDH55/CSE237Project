@@ -27,7 +27,7 @@ public class StudentGroup {
         this.members.add(owner);
         this.isPrivate = false;
         this.invitedStudents = null;
-        this.blacklistStudents = null;
+        this.blacklistStudents = new ArrayList<Student>();
         this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
 
@@ -44,11 +44,10 @@ public class StudentGroup {
         if (isPrivate) {
             this.invitedStudents = new ArrayList<Student>();
             this.invitedStudents.add(owner);
-            this.blacklistStudents = new ArrayList<Student>();
         } else {
             this.invitedStudents = null;
-            this.blacklistStudents = null;
         }
+        this.blacklistStudents = new ArrayList<Student>();
         this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
 
