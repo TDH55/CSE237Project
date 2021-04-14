@@ -342,6 +342,13 @@ public class Prompt {
 					System.out.println();
 					viewGroupMenu();
 				}
+				if(this.currentGroup.isDisallowedStudent(this.currentStudent)) {
+					this.currentGroup.disallowMember(currentStudent);
+					System.out.println("This member is not allowed in this group. Please enter a valid student");
+					System.out.println();
+					viewGroupMenu();
+					
+				}
 				else {
 					System.out.println("Please enter a valid option");
 					viewGroupMenu();
@@ -406,6 +413,11 @@ public class Prompt {
 		System.out.println("Please enter the name of the student you'd like to invite: ");
 	}
 	
+	private void displayDisallowedStudentMenu() {
+		System.out.println();
+		System.out.println("Please enter the name of the student you'd like to bar from the group: ");
+	}
+	
 	private void executeInviteStudentMenu() {
 		String studentToInviteName = this.keyboardIn.next();
 		this.keyboardIn.nextLine();
@@ -422,6 +434,36 @@ public class Prompt {
 				this.currentGroup.inviteStudent(studentToInvite);
 				System.out.println();
 				System.out.println("Student successfully invited.");
+				System.out.println();
+				displayAdminMenu();
+				executeAdminMenu();
+			}
+			
+		} else {
+			System.out.println();
+			System.out.println("No student by that name found.");
+			System.out.println();
+			displayAdminMenu();
+			executeAdminMenu();
+		}
+	}
+	
+	private void executeDisallowStudentMenu() {
+		String studentToDisallowName = this.keyboardIn.next();
+		this.keyboardIn.nextLine();
+		Student studentToDisallow = this.findStudentByName(studentToDisallowName);
+		
+		if(studentToDisallow != null) {
+			if(this.currentGroup.isDisallowedStudent(studentToDisallow)) {
+				System.out.println();
+				System.out.println("Student already barred from group.");
+				System.out.println();
+				displayAdminMenu();
+				executeAdminMenu();
+			} else {
+				this.currentGroup.disallowStudent(studentToDisallow);
+				System.out.println();
+				System.out.println("Student successfully barred from group.");
 				System.out.println();
 				displayAdminMenu();
 				executeAdminMenu();
