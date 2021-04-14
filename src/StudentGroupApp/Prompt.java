@@ -549,17 +549,22 @@ public class Prompt {
 	
 	//create a new student group with current user as owner of group
 	private StudentGroup createStudentGroup() {
+		boolean isPrivate = false;
 		System.out.println("Please input a name for the group you would like to create:");
 		String groupName = this.keyboardIn.nextLine();
 		System.out.println("Please input a description of this student group: ");
-		String groupDescription = this.keyboardIn.next();
-		keyboardIn.nextLine();
+		String groupDescription = this.keyboardIn.nextLine();
 		System.out.println("Please select a tag for your group");
 		printTagChoices();
-		//TODO: refactor this into a function, it is used multiple times
 		Tag groupTag = chooseTag();
+		System.out.println("Is this group private? (Y/N)");
+		String isPrivateQuery = this.keyboardIn.nextLine();
+		
+		if(isPrivateQuery.equals("Y") || isPrivateQuery.equals("y")) {
+			isPrivate = true;
+		}
 
-		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, groupTag);
+		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, isPrivate, groupTag);
 
 		this.addStudentGroupToList(newGroup);
 
