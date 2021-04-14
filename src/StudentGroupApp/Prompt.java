@@ -331,14 +331,25 @@ public class Prompt {
 			viewGroupMenu();
 		} else {
 			if(!this.currentGroup.getIsPrivate()) {
-				this.currentGroup.addMember(currentStudent);
-				System.out.println("Successfully added. ");
-				System.out.println();
-				viewGroupMenu();
+				if(this.currentGroup.isDisallowedStudent(this.currentStudent)) {
+					System.out.println("This member is not allowed in this group. Please enter a valid student");
+					System.out.println();
+					viewGroupMenu();
+				} else {
+					this.currentGroup.addMember(currentStudent);
+					System.out.println("Successfully added. ");
+					System.out.println();
+					viewGroupMenu();
+				}
 			} else {
 				if(this.currentGroup.isInvitedStudent(this.currentStudent)) {
 					this.currentGroup.addMember(currentStudent);
 					System.out.println("Successfully added. ");
+					System.out.println();
+					viewGroupMenu();
+				}
+				if(this.currentGroup.isDisallowedStudent(this.currentStudent)) {
+					System.out.println("This member is not allowed in this group. Please enter a valid student");
 					System.out.println();
 					viewGroupMenu();
 				}
@@ -377,8 +388,9 @@ public class Prompt {
 		System.out.println("Current group: " + this.currentGroup.getGroupName());
 		System.out.println();
 		System.out.println("1. Invite student to group");
-		System.out.println("2. Change group tag");
-		System.out.println("3. Back to member menu");
+		System.out.println("2. Bar student from joining group");
+		System.out.println("3. Change group tag");
+		System.out.println("4. Back to member menu");
 	}
 	
 	private void executeAdminMenu() {
@@ -387,11 +399,14 @@ public class Prompt {
 		if(inputChoice == 1) {
 			displayInviteStudentMenu();
 			executeInviteStudentMenu();
-		} else if (inputChoice == 2) {
+		} else if(inputChoice == 2) {
+			displayDisallowedStudentMenu();
+			executeDisallowStudentMenu();
+		} else if (inputChoice == 3) {
 			changeTagMenu();
 			displayAdminMenu();
 			executeAdminMenu();
-		} else if(inputChoice == 3) {
+		} else if(inputChoice == 4) {
 			System.out.println();
 			viewGroupMenu();
 		} else {
@@ -404,6 +419,11 @@ public class Prompt {
 	private void displayInviteStudentMenu() {
 		System.out.println();
 		System.out.println("Please enter the name of the student you'd like to invite: ");
+	}
+	
+	private void displayDisallowedStudentMenu() {
+		System.out.println();
+		System.out.println("Please enter the name of the student you'd like to bar from the group: ");
 	}
 	
 	private void executeInviteStudentMenu() {
@@ -422,6 +442,36 @@ public class Prompt {
 				this.currentGroup.inviteStudent(studentToInvite);
 				System.out.println();
 				System.out.println("Student successfully invited.");
+				System.out.println();
+				displayAdminMenu();
+				executeAdminMenu();
+			}
+			
+		} else {
+			System.out.println();
+			System.out.println("No student by that name found.");
+			System.out.println();
+			displayAdminMenu();
+			executeAdminMenu();
+		}
+	}
+	
+	private void executeDisallowStudentMenu() {
+		String studentToDisallowName = this.keyboardIn.next();
+		this.keyboardIn.nextLine();
+		Student studentToDisallow = this.findStudentByName(studentToDisallowName);
+		
+		if(studentToDisallow != null) {
+			if(this.currentGroup.isDisallowedStudent(studentToDisallow)) {
+				System.out.println();
+				System.out.println("Student already barred from group.");
+				System.out.println();
+				displayAdminMenu();
+				executeAdminMenu();
+			} else {
+				this.currentGroup.disallowStudent(studentToDisallow);
+				System.out.println();
+				System.out.println("Student successfully barred from group.");
 				System.out.println();
 				displayAdminMenu();
 				executeAdminMenu();
@@ -507,17 +557,22 @@ public class Prompt {
 	
 	//create a new student group with current user as owner of group
 	private StudentGroup createStudentGroup() {
+		boolean isPrivate = false;
 		System.out.println("Please input a name for the group you would like to create:");
 		String groupName = this.keyboardIn.nextLine();
 		System.out.println("Please input a description of this student group: ");
-		String groupDescription = this.keyboardIn.next();
-		keyboardIn.nextLine();
+		String groupDescription = this.keyboardIn.nextLine();
 		System.out.println("Please select a tag for your group");
 		printTagChoices();
-		//TODO: refactor this into a function, it is used multiple times
 		Tag groupTag = chooseTag();
+		System.out.println("Is this group private? (Y/N)");
+		String isPrivateQuery = this.keyboardIn.nextLine();
+		
+		if(isPrivateQuery.equals("Y") || isPrivateQuery.equals("y")) {
+			isPrivate = true;
+		}
 
-		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, groupTag);
+		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, isPrivate, groupTag);
 
 		this.addStudentGroupToList(newGroup);
 
