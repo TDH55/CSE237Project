@@ -1,8 +1,10 @@
 package StudentGroupApp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.spi.CalendarNameProvider;
 
 public class Prompt {
 	private ArrayList<Student> students;
@@ -473,19 +475,12 @@ public class Prompt {
 		String name = this.keyboardIn.nextLine();
 		System.out.println("Please input a description of the event: ");
 		String description = this.keyboardIn.nextLine();
-		System.out.println("Please input the date and time of the event in integers, formatted as such: ");
-		System.out.println("Year month day hour minute");
 		//TODO: more in depth error handling here
-		int year = getInt("Please enter a valid integer value for the year");
-		int month = getInt("Please enter a valid integer value for the month");
-		int day = getInt("Please enter a valid integer value for the day");
-		int hour = getInt("Please enter a valid integer value for the hour");
-		int minute = getInt("Please enter a valid integer value for the minute");
-	
+		Calendar date = getDate();
 		this.keyboardIn.nextLine();
 
 		//TODO: change constructor to take in a date object, not individual value
-		Event newEvent = new Event(name, description, month, day, year, hour, minute, currentGroup.getOwner());
+		Event newEvent = new Event(name, description, date, currentGroup.getOwner());
 		currentGroup.addEvent(newEvent);
 	}
 	
@@ -684,6 +679,34 @@ public class Prompt {
 			return getMenuChoice(maxValue);
 		}
 		return choice;
+	}
+
+	private Calendar getDate() {
+		Calendar date = Calendar.getInstance();
+		System.out.println("Please enter the year of the event as an integer");
+		int year = getInt("Please enter a valid integer value for the year");
+		System.out.println("Please enter the month of the event as an integer");
+		int month = getInt("Please enter a valid integer value for the month");
+		System.out.println("Please enter the day of the event as an integer");
+		int day = getInt("Please enter a valid integer value for the day");
+		System.out.println("Please enter the hour of the event as an integer");
+		int hour = getInt("Please enter a valid integer value for the hour");
+		System.out.println("Please enter the minute of the event as an integer");
+		int minute = getInt("Please enter a valid integer value for the minute");
+		try {
+			date.set(Calendar.YEAR, year);
+			date.set(Calendar.MONTH, month);
+			date.set(Calendar.DAY_OF_MONTH, day);
+			date.set(Calendar.HOUR, hour);
+			date.set(Calendar.MINUTE, minute);
+		} catch(Exception e) {
+
+			System.out.println("Please enter a valid date in the Year Month Day Hour Minute format");
+			this.keyboardIn.nextLine();
+			return getDate();
+		}
+
+		return date;
 	}
 }
 
