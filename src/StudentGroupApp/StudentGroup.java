@@ -97,7 +97,7 @@ public class StudentGroup {
             members.add(owner);
         }
         if(!admins.contains(owner)) {
-            members.add(owner);
+            admins.add(owner);
         }
     }
 
@@ -137,6 +137,14 @@ public class StudentGroup {
         if(!admins.contains(student)){
             admins.add(student);
         }
+    }
+    
+    public void removeAdmin(Student adminToRemove) {
+    	if(!this.admins.contains(adminToRemove)) {
+    		return;
+    	} else {
+    		this.admins.remove(adminToRemove);
+    	}
     }
 
     public void inviteStudent(Student student) {
