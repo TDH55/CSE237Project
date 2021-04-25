@@ -498,7 +498,7 @@ public class Prompt {
 	}
 		
 	private void executeOwnerMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		
 		if(inputChoice == 1) {
@@ -543,7 +543,7 @@ public class Prompt {
 	}
 	
 	private void executeAdminPromoteMenu(ArrayList<Student> studentsInGroup) {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		
 		if(inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
@@ -556,7 +556,7 @@ public class Prompt {
 			displayOwnerMenu();
 			executeOwnerMenu();
 		} else {
-			System.out.println("Please inpute a valid choice.");
+			System.out.println("Please input a valid choice.");
 			displayAdminPromoteMenu();
 		}
 	}
@@ -581,7 +581,7 @@ public class Prompt {
 	}
 	
 	private void executeAdminDemoteMenu(ArrayList<Student> admins) {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		
 		if(inputChoice >= 0 && inputChoice < admins.size()) {
@@ -594,7 +594,7 @@ public class Prompt {
 			displayOwnerMenu();
 			executeOwnerMenu();
 		} else {
-			System.out.println("Please inpute a valid choice.");
+			System.out.println("Please input a valid choice.");
 			displayAdminDemoteMenu();
 		}
 	}
@@ -620,24 +620,24 @@ public class Prompt {
 	}
 	
 	private void executeOwnershipTransferMenu(ArrayList<Student> studentsInGroup) {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
-		
-		if(inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
+
+		if (inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
 			Student studentToPromote = studentsInGroup.get(inputChoice);
 			this.currentGroup.setOwner(studentToPromote);
-			System.out.println("Ownership successfully transferred to " + studentToPromote.getName() + "." );
+			System.out.println("Ownership successfully transferred to " + studentToPromote.getName() + ".");
 			System.out.println();
 			displayAdminMenu();
 			executeAdminMenu();
-		} else if(inputChoice == studentsInGroup.size()) {
+		} else if (inputChoice == studentsInGroup.size()) {
 			displayOwnerMenu();
 			executeOwnerMenu();
 		} else {
-			System.out.println("Please inpute a valid choice.");
+			System.out.println("Please input a valid choice.");
 			displayAdminPromoteMenu();
 		}
-
+	}
 	private void createEventMenu() {
 		System.out.println("Please input a name for the event: ");
 		String name = this.keyboardIn.nextLine();
@@ -752,7 +752,7 @@ public class Prompt {
 	}
 	
 	private void executeKickStudentMenu(ArrayList<Student> studentsInGroup) {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		
 		if(inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
