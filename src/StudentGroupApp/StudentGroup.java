@@ -12,6 +12,7 @@ public class StudentGroup {
     private ArrayList<Student> members;
     private ArrayList<Student> invitedStudents;
     private ArrayList<Student> blacklistStudents;
+    private ArrayList<Event> events;
     private boolean isPrivate;
     private Tag tag;
     //TODO: add array list of events
@@ -28,6 +29,7 @@ public class StudentGroup {
         this.isPrivate = false;
         this.invitedStudents = null;
         this.blacklistStudents = new ArrayList<Student>();
+        this.events = new ArrayList<Event>();
         this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
 
@@ -48,6 +50,7 @@ public class StudentGroup {
             this.invitedStudents = null;
         }
         this.blacklistStudents = new ArrayList<Student>();
+        this.events = new ArrayList<Event>();
         this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
 
@@ -79,6 +82,8 @@ public class StudentGroup {
     	return this.blacklistStudents;
     }
 
+    public ArrayList<Event> getEvents() { return this.events; }
+
     public Tag getTag() {
         return this.tag;
     }
@@ -97,7 +102,7 @@ public class StudentGroup {
             members.add(owner);
         }
         if(!admins.contains(owner)) {
-            members.add(owner);
+            admins.add(owner);
         }
     }
 
@@ -138,6 +143,14 @@ public class StudentGroup {
             admins.add(student);
         }
     }
+    
+    public void removeAdmin(Student adminToRemove) {
+    	if(!this.admins.contains(adminToRemove)) {
+    		return;
+    	} else {
+    		this.admins.remove(adminToRemove);
+    	}
+    }
 
     public void inviteStudent(Student student) {
         if(!invitedStudents.contains(student)) {
@@ -149,6 +162,14 @@ public class StudentGroup {
     	if (!blacklistStudents.contains(student)) {
     		blacklistStudents.add(student);
     	}
+    }
+
+    public void addEvent(Event event) {
+        this.events.add(event);
+    }
+
+    public void removeEvent(Event event) {
+        this.events.remove(event);
     }
 
     public void kickStudent(Student student) {

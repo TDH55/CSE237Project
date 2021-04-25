@@ -264,11 +264,12 @@ public class Prompt {
 		System.out.println("2. View group owner");
 		System.out.println("3. View group admins");
 		System.out.println("4. View group members");
-		System.out.println("5. Back to group menu");
-		System.out.println("6. Back to main menu");
+		System.out.println("5. View group events");
+		System.out.println("6. Back to group menu");
+		System.out.println("7. Back to main menu");
 		
 		if(this.currentGroup.isAdmin(currentStudent)) {
-			System.out.println("7. View admin options");
+			System.out.println("8. View admin options");
 		}
 		
 	}
@@ -299,18 +300,62 @@ public class Prompt {
 			System.out.println(this.currentGroup.getGroupName() + " Members: ");
 			displayListOfStudents(this.currentGroup.getMembers());
 			viewGroupMenu();
-		} else if (inputChoice == 5){
-			selectGroupMenu();
+		} else if (inputChoice == 5) {
+			displayEventMenu();
+			executeEventMenu();
 		} else if (inputChoice == 6){
+			selectGroupMenu();
+		} else if (inputChoice == 7){
 
 			rootMenu();
-		} else if (inputChoice == 7) {
+		} else if (inputChoice == 8) {
 			adminOrInvalid();
 
 		} else {
 			System.out.println("Please enter a valid option");
 			viewGroupMenu();
 		}
+	}
+	
+	private void displayEventMenu() {
+		System.out.println("Please select from the list of events below: ");
+		System.out.println();
+		ArrayList<Event> groupEvents = currentGroup.getEvents();
+		for (int i = 0; i < groupEvents.size(); i++) {
+			System.out.println(i + ". " + groupEvents.get(i).getTitle());
+		}
+		System.out.println("-1. Back to group view");
+	}
+
+	private void executeEventMenu() {
+		int inputChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
+		ArrayList<Event> groupEvents = currentGroup.getEvents();
+		if (inputChoice == -1) {
+			viewGroupMenu();
+		} else if (inputChoice >= groupEvents.size() || inputChoice < -1) {
+			System.out.println("Please enter a valid option");
+			System.out.println();
+			displayEventMenu();
+			executeEventMenu();
+		} else {
+			displayEvent(groupEvents.get(inputChoice));
+		}
+
+	}
+	
+	private void displayEvent(Event current) {
+		System.out.println(current.getTitle());
+		System.out.println(current.getDescription());
+		System.out.println(current.getDate().toString());
+		System.out.println();
+		for (Student rsvped : current.getRsvpedStudents()) {
+			System.out.println(rsvped.getName());
+		}
+		System.out.println();
+		
+		displayViewGroupMenu();
+		executeViewGroupMenu();
 	}
 
 	private void adminOrInvalid() {
@@ -387,26 +432,49 @@ public class Prompt {
 	private void displayAdminMenu() {
 		System.out.println("Current group: " + this.currentGroup.getGroupName());
 		System.out.println();
+		
+		Student owner = this.currentGroup.getOwner();
+		if(this.currentStudent.equals(owner)) {
+			System.out.println("0. View owner options");
+		}
 		System.out.println("1. Invite student to group");
 		System.out.println("2. Bar student from joining group");
-		System.out.println("3. Change group tag");
-		System.out.println("4. Back to member menu");
+		System.out.println("3. Kick a student from the group");
+		System.out.println("4. Change group tag");
+		System.out.println("5. Create an event");
+		System.out.println("6. Back to member menu");
 	}
 	
 	private void executeAdminMenu() {
 		int inputChoice = this.keyboardIn.nextInt();
 		keyboardIn.nextLine();
-		if(inputChoice == 1) {
+		
+		if(inputChoice == 0) {
+			Student owner = this.currentGroup.getOwner();
+			if(this.currentStudent.equals(owner)) {
+				displayOwnerMenu();
+				executeOwnerMenu();
+			} else {
+				System.out.println("Please enter a valid option");
+			}
+			
+		} else if(inputChoice == 1) {
 			displayInviteStudentMenu();
 			executeInviteStudentMenu();
 		} else if(inputChoice == 2) {
 			displayDisallowedStudentMenu();
 			executeDisallowStudentMenu();
 		} else if (inputChoice == 3) {
+			displayKickStudentMenu();
+		} else if (inputChoice == 4) {
 			changeTagMenu();
 			displayAdminMenu();
 			executeAdminMenu();
-		} else if(inputChoice == 4) {
+		} else if (inputChoice == 5) {
+			createEventMenu();
+			displayEventMenu();
+			executeEventMenu();
+		} else if(inputChoice == 6) {
 			System.out.println();
 			viewGroupMenu();
 		} else {
@@ -414,6 +482,177 @@ public class Prompt {
 			displayAdminMenu();
 			executeAdminMenu();
 		}
+	}
+	
+	private void displayOwnerMenu() {
+		System.out.println("Current group: " + this.currentGroup.getGroupName());
+		System.out.println();
+		
+		System.out.println("1. Promote group member to admin.");
+		System.out.println("2. Remove admin.");
+		System.out.println("3. Transfer ownership to a group member.");
+		System.out.println("4. Back to admin menu.");
+	}
+		
+	private void executeOwnerMenu() {
+		int inputChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
+		
+		if(inputChoice == 1) {
+			displayAdminPromoteMenu();
+		} else if(inputChoice == 2) {
+			displayAdminDemoteMenu();
+		} else if (inputChoice == 3) {
+			displayOwnershipTransferMenu();
+		} else if(inputChoice == 4) {
+			displayAdminMenu();
+			executeAdminMenu();
+		} else {
+			System.out.println("Please enter a valid option");
+			displayAdminMenu();
+			executeAdminMenu();
+		}
+		
+	}
+
+	private void displayAdminPromoteMenu() {
+		//finding owner and removing them from list of possible students to be kicked
+		ArrayList<Student> studentsInGroup = new ArrayList<Student>(this.currentGroup.getMembers());
+		studentsInGroup.remove(this.currentStudent);
+		ArrayList<Student> admins = new ArrayList<Student>(this.currentGroup.getAdmins());
+		for(Student admin: admins) {
+			studentsInGroup.remove(admin);
+		}
+		
+		if(studentsInGroup.size() > 0) {
+			System.out.println();
+			System.out.println("Please enter digit corresponding to student you wish to promote: ");
+			this.displayListOfStudents(studentsInGroup);
+			System.out.println(studentsInGroup.size() + ". Exit");
+			executeAdminPromoteMenu(studentsInGroup);
+		} else {
+			System.out.println();
+			System.out.println("No students for you to promote. Exiting.");
+			System.out.println();
+			displayOwnerMenu();
+			executeOwnerMenu();
+		}
+	}
+	
+	private void executeAdminPromoteMenu(ArrayList<Student> studentsInGroup) {
+		int inputChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
+		
+		if(inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
+			Student studentToPromote = studentsInGroup.get(inputChoice);
+			this.currentGroup.addAdmin(studentToPromote);
+			System.out.println("Student successfully promoted.");
+			System.out.println();
+			displayAdminPromoteMenu();
+		} else if(inputChoice == studentsInGroup.size()) {
+			displayOwnerMenu();
+			executeOwnerMenu();
+		} else {
+			System.out.println("Please inpute a valid choice.");
+			displayAdminPromoteMenu();
+		}
+	}
+	
+	private void displayAdminDemoteMenu() {
+		ArrayList<Student> admins = new ArrayList<Student>(this.currentGroup.getAdmins());
+		admins.remove(this.currentStudent);
+		
+		if(admins.size() > 0) {
+			System.out.println();
+			System.out.println("Please enter digit corresponding to admin you wish to demote: ");
+			this.displayListOfStudents(admins);
+			System.out.println(admins.size() + ". Exit");
+			executeAdminDemoteMenu(admins);
+		} else {
+			System.out.println();
+			System.out.println("No students for you to demote. Exiting.");
+			System.out.println();
+			displayOwnerMenu();
+			executeOwnerMenu();
+		}
+	}
+	
+	private void executeAdminDemoteMenu(ArrayList<Student> admins) {
+		int inputChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
+		
+		if(inputChoice >= 0 && inputChoice < admins.size()) {
+			Student studentToDemote = admins.get(inputChoice);
+			this.currentGroup.removeAdmin(studentToDemote);
+			System.out.println("Student successfully demoted.");
+			System.out.println();
+			displayAdminDemoteMenu();
+		} else if(inputChoice == admins.size()) {
+			displayOwnerMenu();
+			executeOwnerMenu();
+		} else {
+			System.out.println("Please inpute a valid choice.");
+			displayAdminDemoteMenu();
+		}
+	}
+	
+	private void displayOwnershipTransferMenu() {
+		//finding owner and removing them from list of possible students to be kicked
+		ArrayList<Student> studentsInGroup = new ArrayList<Student> (this.currentGroup.getMembers());
+		studentsInGroup.remove(this.currentStudent);
+		
+		if(studentsInGroup.size() > 0) {
+			System.out.println();
+			System.out.println("Please enter digit corresponding to student you wish to promote: ");
+			this.displayListOfStudents(studentsInGroup);
+			System.out.println(studentsInGroup.size() + ". Exit");
+			executeOwnershipTransferMenu(studentsInGroup);
+		} else {
+			System.out.println();
+			System.out.println("No students for you to promote. Exiting.");
+			System.out.println();
+			displayOwnerMenu();
+			executeOwnerMenu();
+		}
+	}
+	
+	private void executeOwnershipTransferMenu(ArrayList<Student> studentsInGroup) {
+		int inputChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
+		
+		if(inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
+			Student studentToPromote = studentsInGroup.get(inputChoice);
+			this.currentGroup.setOwner(studentToPromote);
+			System.out.println("Ownership successfully transferred to " + studentToPromote.getName() + "." );
+			System.out.println();
+			displayAdminMenu();
+			executeAdminMenu();
+		} else if(inputChoice == studentsInGroup.size()) {
+			displayOwnerMenu();
+			executeOwnerMenu();
+		} else {
+			System.out.println("Please inpute a valid choice.");
+			displayAdminPromoteMenu();
+		}
+
+	private void createEventMenu() {
+		System.out.println("Please input a name for the event: ");
+		String name = this.keyboardIn.nextLine();
+		System.out.println("Please input a description of the event: ");
+		String description = this.keyboardIn.nextLine();
+		System.out.println("Please input the date and time of the event in integers, formatted as such: ");
+		System.out.println("Year month day hour minute");
+		int year = this.keyboardIn.nextInt();
+		int month = this.keyboardIn.nextInt();
+		int day = this.keyboardIn.nextInt();
+		int hour = this.keyboardIn.nextInt();
+		int minute = this.keyboardIn.nextInt();
+	
+		this.keyboardIn.nextLine();
+
+		Event newEvent = new Event(name, description, month, day, year, hour, minute, currentGroup.getOwner());
+		currentGroup.addEvent(newEvent);
+
 	}
 	
 	private void displayInviteStudentMenu() {
@@ -485,7 +724,56 @@ public class Prompt {
 			executeAdminMenu();
 		}
 	}
-
+	
+	private void displayKickStudentMenu() {
+		//finding owner and removing them from list of possible students to be kicked
+		ArrayList<Student> studentsInGroup = new ArrayList<Student>(this.currentGroup.getMembers());
+		Student owner = this.currentGroup.getOwner();
+		studentsInGroup.remove(owner);
+		
+		if(!this.currentStudent.equals(owner)) {
+			ArrayList<Student> admins = this.currentGroup.getAdmins();
+			for(Student admin: admins) {
+				studentsInGroup.remove(admin);
+			}
+		}
+		if(studentsInGroup.size() > 0) {
+			System.out.println();
+			System.out.println("Please enter digit corresponding to student you wish to kick: ");
+			this.displayListOfStudents(studentsInGroup);
+			System.out.println(studentsInGroup.size() + ". Exit");
+			executeKickStudentMenu(studentsInGroup);
+		} else {
+			System.out.println();
+			System.out.println("No students for you to kick. Exiting.");
+			System.out.println();
+			displayAdminMenu();
+			executeAdminMenu();
+		}
+		
+	}
+	
+	private void executeKickStudentMenu(ArrayList<Student> studentsInGroup) {
+		int inputChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
+		
+		if(inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
+			Student studentToKick = studentsInGroup.get(inputChoice);
+			this.currentGroup.kickStudent(studentToKick);
+			this.currentGroup.disallowStudent(studentToKick);
+			System.out.println("Student successfully kicked.");
+			System.out.println();
+			displayKickStudentMenu();
+		} else if(inputChoice == studentsInGroup.size()) {
+			displayAdminMenu();
+			executeAdminMenu();
+		} else {
+			System.out.println("Please inpute a valid choice.");
+			displayKickStudentMenu();
+		}
+	}
+	
+	
 	private void changeTagMenu() {
 		printTagChoices();
 		Tag groupTag = chooseTag();
