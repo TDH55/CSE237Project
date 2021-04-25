@@ -1,6 +1,7 @@
 package StudentGroupApp;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Prompt {
@@ -112,7 +113,7 @@ public class Prompt {
 		String email = this.keyboardIn.next();
 		this.keyboardIn.nextLine();
 		System.out.println("Please input a class year for the student: ");
-		int classYear = this.keyboardIn.nextInt();
+		int classYear = getInt("Please enter a valid integer value for the class year");
 		this.keyboardIn.nextLine();
 		System.out.println("Please input a password for the student: ");
 		String password = this.keyboardIn.next();
@@ -139,7 +140,7 @@ public class Prompt {
 	}
 
 	private void executeRootMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		this.keyboardIn.nextLine();
 
 		
@@ -227,7 +228,7 @@ public class Prompt {
 	}
 
 	private void executeSelectGroupMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		if (inputChoice == -1) {
 			rootMenu();
@@ -275,7 +276,7 @@ public class Prompt {
 	}
 
 	private void executeViewGroupMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		ArrayList<Student> members = this.currentGroup.getMembers();
 		
@@ -328,7 +329,7 @@ public class Prompt {
 	}
 
 	private void executeEventMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		ArrayList<Event> groupEvents = currentGroup.getEvents();
 		if (inputChoice == -1) {
@@ -409,7 +410,7 @@ public class Prompt {
 	private void selectTagMenu() {
 		System.out.println("Enter the tag you would like to see groups for");
 		printTagChoices();
-		int tagChoice = this.keyboardIn.nextInt();
+		int tagChoice = getMenuChoice(Tag.values().length);
 		keyboardIn.nextLine();
 		Tag groupTag = Tag.None;
 		for (Tag tag : Tag.values()) {
@@ -440,7 +441,7 @@ public class Prompt {
 	}
 	
 	private void executeAdminMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		if(inputChoice == 1) {
 			displayInviteStudentMenu();
@@ -474,14 +475,16 @@ public class Prompt {
 		String description = this.keyboardIn.nextLine();
 		System.out.println("Please input the date and time of the event in integers, formatted as such: ");
 		System.out.println("Year month day hour minute");
-		int year = this.keyboardIn.nextInt();
-		int month = this.keyboardIn.nextInt();
-		int day = this.keyboardIn.nextInt();
-		int hour = this.keyboardIn.nextInt();
-		int minute = this.keyboardIn.nextInt();
+		//TODO: more in depth error handling here
+		int year = getInt("Please enter a valid integer value for the year");
+		int month = getInt("Please enter a valid integer value for the month");
+		int day = getInt("Please enter a valid integer value for the day");
+		int hour = getInt("Please enter a valid integer value for the hour");
+		int minute = getInt("Please enter a valid integer value for the minute");
 	
 		this.keyboardIn.nextLine();
 
+		//TODO: change constructor to take in a date object, not individual value
 		Event newEvent = new Event(name, description, month, day, year, hour, minute, currentGroup.getOwner());
 		currentGroup.addEvent(newEvent);
 	}
@@ -564,7 +567,7 @@ public class Prompt {
 	}
 
 	private Tag chooseTag() {
-		int tagChoice = keyboardIn.nextInt();
+		int tagChoice = getMenuChoice(Tag.values().length);
 		keyboardIn.nextLine();
 		Tag groupTag = Tag.None;
 		for (Tag tag : Tag.values()) {
@@ -603,7 +606,7 @@ public class Prompt {
 		String email = this.keyboardIn.next();
 		this.keyboardIn.nextLine();
 		System.out.println("Please input a class year for the student: ");
-		int classYear = this.keyboardIn.nextInt();
+		int classYear = getInt("Please enter a valid integer value for the year");
 		this.keyboardIn.nextLine();
 		System.out.println("Please input a password for the student: ");
 		String password = this.keyboardIn.next();
@@ -654,6 +657,33 @@ public class Prompt {
 			System.out.print((tag.ordinal() + 1) + ". ");
 			System.out.println(tag.toString());
 		}
+	}
+
+	private int getInt(String errorMessage) {
+		int val;
+		try {
+			val = this.keyboardIn.nextInt();
+		} catch(InputMismatchException e) {
+			System.out.println(errorMessage);
+			this.keyboardIn.nextLine();
+			return getInt(errorMessage);
+		}
+		return val;
+	}
+
+	private int getMenuChoice(int maxValue) {
+		int choice;
+		try {
+			choice = this.keyboardIn.nextInt();
+			if(choice > maxValue) {
+				throw new Exception("Invalid menu option");
+			}
+		} catch (Exception e) {
+			System.out.println("Please select a valid menu option");
+			this.keyboardIn.nextLine();
+			return getMenuChoice(maxValue);
+		}
+		return choice;
 	}
 }
 
