@@ -264,11 +264,12 @@ public class Prompt {
 		System.out.println("2. View group owner");
 		System.out.println("3. View group admins");
 		System.out.println("4. View group members");
-		System.out.println("5. Back to group menu");
-		System.out.println("6. Back to main menu");
+		System.out.println("5. View group events");
+		System.out.println("6. Back to group menu");
+		System.out.println("7. Back to main menu");
 		
 		if(this.currentGroup.isAdmin(currentStudent)) {
-			System.out.println("7. View admin options");
+			System.out.println("8. View admin options");
 		}
 		
 	}
@@ -299,18 +300,62 @@ public class Prompt {
 			System.out.println(this.currentGroup.getGroupName() + " Members: ");
 			displayListOfStudents(this.currentGroup.getMembers());
 			viewGroupMenu();
-		} else if (inputChoice == 5){
-			selectGroupMenu();
+		} else if (inputChoice == 5) {
+			displayEventMenu();
+			executeEventMenu();
 		} else if (inputChoice == 6){
+			selectGroupMenu();
+		} else if (inputChoice == 7){
 
 			rootMenu();
-		} else if (inputChoice == 7) {
+		} else if (inputChoice == 8) {
 			adminOrInvalid();
 
 		} else {
 			System.out.println("Please enter a valid option");
 			viewGroupMenu();
 		}
+	}
+	
+	private void displayEventMenu() {
+		System.out.println("Please select from the list of events below: ");
+		System.out.println();
+		ArrayList<Event> groupEvents = currentGroup.getEvents();
+		for (int i = 0; i < groupEvents.size(); i++) {
+			System.out.println(i + ". " + groupEvents.get(i).getTitle());
+		}
+		System.out.println("-1. Back to group view");
+	}
+
+	private void executeEventMenu() {
+		int inputChoice = this.keyboardIn.nextInt();
+		keyboardIn.nextLine();
+		ArrayList<Event> groupEvents = currentGroup.getEvents();
+		if (inputChoice == -1) {
+			viewGroupMenu();
+		} else if (inputChoice >= groupEvents.size() || inputChoice < -1) {
+			System.out.println("Please enter a valid option");
+			System.out.println();
+			displayEventMenu();
+			executeEventMenu();
+		} else {
+			displayEvent(groupEvents.get(inputChoice));
+		}
+
+	}
+	
+	private void displayEvent(Event current) {
+		System.out.println(current.getTitle());
+		System.out.println(current.getDescription());
+		System.out.println(current.getDate().toString());
+		System.out.println();
+		for (Student rsvped : current.getRsvpedStudents()) {
+			System.out.println(rsvped.getName());
+		}
+		System.out.println();
+		
+		displayViewGroupMenu();
+		executeViewGroupMenu();
 	}
 
 	private void adminOrInvalid() {
@@ -396,7 +441,8 @@ public class Prompt {
 		System.out.println("2. Bar student from joining group");
 		System.out.println("3. Kick a student from the group");
 		System.out.println("4. Change group tag");
-		System.out.println("5. Back to member menu");
+		System.out.println("5. Create an event");
+		System.out.println("6. Back to member menu");
 	}
 	
 	private void executeAdminMenu() {
@@ -424,7 +470,11 @@ public class Prompt {
 			changeTagMenu();
 			displayAdminMenu();
 			executeAdminMenu();
-		} else if(inputChoice == 5) {
+		} else if (inputChoice == 5) {
+			createEventMenu();
+			displayEventMenu();
+			executeEventMenu();
+		} else if(inputChoice == 6) {
 			System.out.println();
 			viewGroupMenu();
 		} else {
@@ -584,6 +634,25 @@ public class Prompt {
 			System.out.println("Please inpute a valid choice.");
 			displayAdminPromoteMenu();
 		}
+
+	private void createEventMenu() {
+		System.out.println("Please input a name for the event: ");
+		String name = this.keyboardIn.nextLine();
+		System.out.println("Please input a description of the event: ");
+		String description = this.keyboardIn.nextLine();
+		System.out.println("Please input the date and time of the event in integers, formatted as such: ");
+		System.out.println("Year month day hour minute");
+		int year = this.keyboardIn.nextInt();
+		int month = this.keyboardIn.nextInt();
+		int day = this.keyboardIn.nextInt();
+		int hour = this.keyboardIn.nextInt();
+		int minute = this.keyboardIn.nextInt();
+	
+		this.keyboardIn.nextLine();
+
+		Event newEvent = new Event(name, description, month, day, year, hour, minute, currentGroup.getOwner());
+		currentGroup.addEvent(newEvent);
+
 	}
 	
 	private void displayInviteStudentMenu() {
