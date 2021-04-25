@@ -152,6 +152,17 @@ class StudentGroupTests {
 		assertEquals(group.getAdmins(), adminList);
 	}
 	
+	void testRemoveAdmins() {
+		StudentGroup group = new StudentGroup("Group Name", "Description", owner, Tag.None);
+		group.addAdmin(firstGroupMember);
+		group.addAdmin(secondGroupMember);
+		ArrayList<Student> groupAdmins = group.getAdmins();
+		assertEquals(3, groupAdmins.size());
+		group.removeAdmin(secondGroupMember);
+		assertEquals(2, groupAdmins.size());
+		assertEquals(groupAdmins.contains(secondGroupMember), false);
+	}
+	
 	@Test
 	void testIsInvitedStudent() {
 		StudentGroup group = new StudentGroup("Group Name", "Description", owner, true, Tag.None);
