@@ -367,7 +367,7 @@ public class Prompt {
 	}
 	
 	private void executeRSVPMenu(Event current) {
-		int inputChoice = keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		if (inputChoice == 1) {
 			current.addStudent(currentStudent);
