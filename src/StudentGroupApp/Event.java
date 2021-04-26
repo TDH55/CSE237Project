@@ -29,7 +29,15 @@ public class Event {
 //    }
 
     public void addStudent(Student student) {
-        this.rsvpedStudents.add(student);
+    	boolean isRSVPed = false;
+    	for (Student s : rsvpedStudents) {
+    		if (s == student) {
+    			isRSVPed = true;
+    		}
+    	}
+    	if (!isRSVPed) {
+    		this.rsvpedStudents.add(student);
+    	}
     }
 
     public void removeStudent(Student student) {
