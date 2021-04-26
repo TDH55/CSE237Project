@@ -354,10 +354,34 @@ public class Prompt {
 		}
 		System.out.println();
 		
-		displayViewGroupMenu();
-		executeViewGroupMenu();
+		displayRSVPMenu();
+		executeRSVPMenu(current);
 	}
 
+	private void displayRSVPMenu() {
+		System.out.println("1. RSVP for this event");
+		System.out.println("2. Return to group view");
+	}
+	
+	private void executeRSVPMenu(Event current) {
+		int inputChoice = keyboardIn.nextInt();
+		keyboardIn.nextLine();
+		if (inputChoice == 1) {
+			current.addStudent(currentStudent);
+			displayViewGroupMenu();
+			executeViewGroupMenu();
+		}
+		else if (inputChoice == 2) {
+			displayViewGroupMenu();
+			executeViewGroupMenu();
+		}
+		else {
+			System.out.println("Please choose a valid option");
+			executeRSVPMenu(current);
+			
+		}
+	}
+	
 	private void adminOrInvalid() {
 		if(this.currentGroup.isAdmin(currentStudent)) {
 			displayAdminMenu();
