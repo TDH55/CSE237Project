@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class StudentGroup {
-    //Student group member variables
     private String groupName;
     private String description;
     private Student owner;
@@ -54,6 +53,7 @@ public class StudentGroup {
         this.tag = Objects.requireNonNullElse(tag, Tag.None);
     }
 
+//Student group getters
     public String getGroupName() {
         return this.groupName;
     }
@@ -88,6 +88,7 @@ public class StudentGroup {
         return this.tag;
     }
 
+//Student group setters
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
@@ -110,6 +111,7 @@ public class StudentGroup {
         this.tag = tag;
     }
 
+//Other student group functions
     public void addMember(Student newMember) {
         if(!members.contains(newMember)){
             if(!isPrivate){
