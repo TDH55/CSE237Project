@@ -24,8 +24,7 @@ public class Prompt {
 	public static void main(String[] args) {
 		
 		Prompt studentGroupPrompts = new Prompt();
-		
-		//Creating test students and groups
+		//Tests
 		Student testStudentOne = new Student("Kedar", "kedar.kedar@wustl.edu", 2021, "password");
 		Student testStudentTwo = new Student("Karl", "karl@outlook.com", 2022, "secret");
 		studentGroupPrompts.addStudentToList(testStudentOne);
@@ -35,8 +34,7 @@ public class Prompt {
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, Tag.Recreational));
 		studentGroupPrompts.addStudentGroupToList(
-				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.Recreational));
-		
+				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.Recreational));	
 		
 		studentGroupPrompts.runMenu();
 	}
@@ -45,7 +43,7 @@ public class Prompt {
 		this.students.add(studentToAdd);
 	}
 
-	// I changed this to public to write the tests for search - Taylor
+	//Public to write the tests for search - Taylor
 	public void addStudentGroupToList(StudentGroup groupToAdd) {
 		this.groups.add(groupToAdd);
 	}
@@ -63,13 +61,11 @@ public class Prompt {
 		System.out.println("Welcome! Please enter your name to sign/log in: ");
 	}
 
+	//checks student login, if new, creates a new login for student
 	private void executeLoginMenu() {
 
 		String userName = this.keyboardIn.nextLine();
 		Student studentToBeLoggedIn = this.findStudentByName(userName);
-
-		// If the student is already in the system, ask for their password,
-		// otherwise create a new student
 		if (studentToBeLoggedIn != null) {
 			this.executePasswordMenu(studentToBeLoggedIn);
 			
@@ -88,7 +84,6 @@ public class Prompt {
 				return foundStudent;
 			}
 		}
-
 		return null;
 	}
 	
@@ -121,7 +116,6 @@ public class Prompt {
 		String password = this.keyboardIn.next();
 		this.keyboardIn.nextLine();
 
-
 		Student newStudent = new Student(name, email, classYear, password);
 		this.addStudentToList(newStudent);
 
@@ -131,7 +125,6 @@ public class Prompt {
 	private void displayRootMenu() {
 		System.out.println("Current student: " + this.currentStudent.getName());
 		System.out.println();
-
 		System.out.println("0. Create a group");
 		System.out.println("1. See groups");
 		System.out.println("2. See groups by tags");
@@ -145,7 +138,6 @@ public class Prompt {
 		int inputChoice = getInt("Please enter a valid integer value");
 		this.keyboardIn.nextLine();
 
-		
 		if (inputChoice == 0) {
 			// Create a group
 			currentGroup = createStudentGroup();
@@ -242,7 +234,6 @@ public class Prompt {
 			this.currentGroup = this.groups.get(inputChoice);
 			viewGroupMenu();
 		}
-
 	}
 
 	private void displayViewGroupMenu() {
@@ -274,7 +265,6 @@ public class Prompt {
 		if(this.currentGroup.isAdmin(currentStudent)) {
 			System.out.println("8. View admin options");
 		}
-		
 	}
 
 	private void executeViewGroupMenu() {
@@ -344,7 +334,6 @@ public class Prompt {
 		} else {
 			displayEvent(groupEvents.get(inputChoice));
 		}
-
 	}
 	
 	private void displayEvent(Event current) {
@@ -356,7 +345,6 @@ public class Prompt {
 			System.out.println(rsvped.getName());
 		}
 		System.out.println();
-		
 		displayViewGroupMenu();
 		executeViewGroupMenu();
 	}
@@ -420,7 +408,7 @@ public class Prompt {
 				groupTag = tag;
 			}
 		}
-		//TODO: Allow users to view group from here? (next iteration?)
+		//TODO: Allow users to view group from here?
 		ArrayList<StudentGroup> groupsToDisplay = getGroupByTag(groupTag);
 		if(groupsToDisplay.isEmpty()) {
 			System.out.println("No groups with this tag");
@@ -431,7 +419,6 @@ public class Prompt {
 		}
 	}
 
-	
 	private void displayAdminMenu() {
 		System.out.println("Current group: " + this.currentGroup.getGroupName());
 		System.out.println();
@@ -500,7 +487,6 @@ public class Prompt {
 	private void executeOwnerMenu() {
 		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
-		
 		if(inputChoice == 1) {
 			displayAdminPromoteMenu();
 		} else if(inputChoice == 2) {
@@ -515,11 +501,10 @@ public class Prompt {
 			displayAdminMenu();
 			executeAdminMenu();
 		}
-		
 	}
 
+	//finds owner and removes them from list of possible students to be kicked, then can promote student to admin
 	private void displayAdminPromoteMenu() {
-		//finding owner and removing them from list of possible students to be kicked
 		ArrayList<Student> studentsInGroup = new ArrayList<Student>(this.currentGroup.getMembers());
 		studentsInGroup.remove(this.currentStudent);
 		ArrayList<Student> admins = new ArrayList<Student>(this.currentGroup.getAdmins());
@@ -561,6 +546,7 @@ public class Prompt {
 		}
 	}
 	
+	//finds owner and removes them from list of possible students to be kicked, then can demote student to admin
 	private void displayAdminDemoteMenu() {
 		ArrayList<Student> admins = new ArrayList<Student>(this.currentGroup.getAdmins());
 		admins.remove(this.currentStudent);
@@ -599,8 +585,8 @@ public class Prompt {
 		}
 	}
 	
+	//finding owner and removing them from list of possible students to be kicked, then promote a student to owner
 	private void displayOwnershipTransferMenu() {
-		//finding owner and removing them from list of possible students to be kicked
 		ArrayList<Student> studentsInGroup = new ArrayList<Student> (this.currentGroup.getMembers());
 		studentsInGroup.remove(this.currentStudent);
 		
@@ -638,6 +624,8 @@ public class Prompt {
 			displayAdminPromoteMenu();
 		}
 	}
+	
+//event functions
 	private void createEventMenu() {
 		System.out.println("Please input a name for the event: ");
 		String name = this.keyboardIn.nextLine();
@@ -650,7 +638,6 @@ public class Prompt {
 		//TODO: change constructor to take in a date object, not individual value
 		Event newEvent = new Event(name, description, date, currentGroup.getOwner());
 		currentGroup.addEvent(newEvent);
-
 	}
 	
 	private void displayInviteStudentMenu() {
@@ -683,7 +670,6 @@ public class Prompt {
 				displayAdminMenu();
 				executeAdminMenu();
 			}
-			
 		} else {
 			System.out.println();
 			System.out.println("No student by that name found.");
@@ -713,7 +699,6 @@ public class Prompt {
 				displayAdminMenu();
 				executeAdminMenu();
 			}
-			
 		} else {
 			System.out.println();
 			System.out.println("No student by that name found.");
@@ -723,8 +708,9 @@ public class Prompt {
 		}
 	}
 	
+	//finding owner and removing them from list of possible students to be kicked, then kick out a student
 	private void displayKickStudentMenu() {
-		//finding owner and removing them from list of possible students to be kicked
+
 		ArrayList<Student> studentsInGroup = new ArrayList<Student>(this.currentGroup.getMembers());
 		Student owner = this.currentGroup.getOwner();
 		studentsInGroup.remove(owner);
@@ -748,7 +734,6 @@ public class Prompt {
 			displayAdminMenu();
 			executeAdminMenu();
 		}
-		
 	}
 	
 	private void executeKickStudentMenu(ArrayList<Student> studentsInGroup) {
@@ -827,7 +812,6 @@ public class Prompt {
 
 		Student newStudent = new Student(name, email, classYear, password);
 		this.addStudentToList(newStudent);
-
 	}
 
 	public ArrayList<StudentGroup> searchGroups(String query) {
@@ -841,7 +825,7 @@ public class Prompt {
 		return results;
 	}
 	
-	//create a new student group with current user as owner of group
+	//uses current user as owner of group
 	private StudentGroup createStudentGroup() {
 		boolean isPrivate = false;
 		System.out.println("Please input a name for the group you would like to create:");
@@ -857,11 +841,8 @@ public class Prompt {
 		if(isPrivateQuery.equals("Y") || isPrivateQuery.equals("y")) {
 			isPrivate = true;
 		}
-
 		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, isPrivate, groupTag);
-
 		this.addStudentGroupToList(newGroup);
-
 		return newGroup;
 	}
 
@@ -918,12 +899,10 @@ public class Prompt {
 			date.set(Calendar.HOUR, hour);
 			date.set(Calendar.MINUTE, minute);
 		} catch(Exception e) {
-
 			System.out.println("Please enter a valid date in the Year Month Day Hour Minute format");
 			this.keyboardIn.nextLine();
 			return getDate();
 		}
-
 		return date;
 	}
 }
