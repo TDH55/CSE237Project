@@ -17,17 +17,7 @@ public class Event {
         this.rsvpedStudents = new ArrayList<Student>();
         this.rsvpedStudents.add(owner);
     }
-
-//    public Event(String title, String description, Integer month, Integer day, Integer year, Integer hour, Integer minute, Student owner) {
-//        this.title = title;
-//        this.description = description;
-//        Calendar date = Calendar.getInstance();
-//        date.set(year, month, day, hour, minute);
-//        this.date = date.getTime();
-//        this.rsvpedStudents = new ArrayList<Student>();
-//        this.rsvpedStudents.add(owner);
-//    }
-
+    
     public void addStudent(Student student) {
         this.rsvpedStudents.add(student);
     }
@@ -35,7 +25,8 @@ public class Event {
     public void removeStudent(Student student) {
         this.rsvpedStudents.remove(student);
     }
-
+    
+//Student event getters: 
     public String getTitle() {
         return title;
     }
@@ -49,7 +40,8 @@ public class Event {
     public ArrayList<Student> getRsvpedStudents() {
         return rsvpedStudents;
     }
-
+    
+//Student event setters: 
     public void setTitle(String title) {
         this.title = title;
     }
