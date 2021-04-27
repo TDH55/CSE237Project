@@ -19,10 +19,8 @@ public class Prompt {
 	}
 
 	public static void main(String[] args) {
-		
 		Prompt studentGroupPrompts = new Prompt();
-		
-		//Creating test students and groups
+		//Test students and groups
 		Student testStudentOne = new Student("Kedar", "kedar.kedar@wustl.edu", 2021, "password");
 		Student testStudentTwo = new Student("Karl", "karl@outlook.com", 2022, "secret");
 		studentGroupPrompts.addStudentToList(testStudentOne);
@@ -33,8 +31,7 @@ public class Prompt {
 				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, Tag.Recreational));
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.Recreational));
-		
-		
+
 		studentGroupPrompts.runMenu();
 	}
 
