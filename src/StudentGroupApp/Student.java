@@ -1,16 +1,14 @@
+//The student class contains all the information about a student that is created upon launching the app:
+
 package StudentGroupApp;
 
-//The student class contains all the information about a student that is created upon launching the app
-
 public class Student {
-	//member variables for student class
 	private String name;
 	private String email;
 	private Integer classYear;
 	private String password;
 	//TODO: add an array list of groups
 
-	//initializer for student class
 	public Student(String name, String email, Integer classYear, String password) {
 	    this.name = name;
 	    this.email = email;
@@ -18,7 +16,7 @@ public class Student {
 	    this.password = password;
     }
 
-    //getters for student classs
+//student class getters
     public String getName(){
 		return name;
 	}
@@ -31,7 +29,7 @@ public class Student {
 		return classYear;
 	}
 
-	//Setters for student class
+//Student class setters
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -44,7 +42,7 @@ public class Student {
 		this.classYear = classYear;
 	}
 
-	//student class functions
+//Basic student functions
 	public Boolean checkPassword(String passwordGuess) {
 		return passwordGuess.equals(password);
 	}

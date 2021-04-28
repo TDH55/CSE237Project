@@ -22,10 +22,8 @@ public class Prompt {
 	}
 
 	public static void main(String[] args) {
-		
 		Prompt studentGroupPrompts = new Prompt();
-		
-		//Creating test students and groups
+		//Test students and groups
 		Student testStudentOne = new Student("Kedar", "kedar.kedar@wustl.edu", 2021, "password");
 		Student testStudentTwo = new Student("Karl", "karl@outlook.com", 2022, "secret");
 		studentGroupPrompts.addStudentToList(testStudentOne);
@@ -36,8 +34,7 @@ public class Prompt {
 				new StudentGroup("Anime Fans", "A group to talk about all things anime", testStudentOne, Tag.Recreational));
 		studentGroupPrompts.addStudentGroupToList(
 				new StudentGroup("Gamers", "A group to talk about all things gaming", testStudentOne, Tag.Recreational));
-		
-		
+
 		studentGroupPrompts.runMenu();
 	}
 
@@ -45,7 +42,7 @@ public class Prompt {
 		this.students.add(studentToAdd);
 	}
 
-	// I changed this to public to write the tests for search - Taylor
+	//public to write the tests for search
 	public void addStudentGroupToList(StudentGroup groupToAdd) {
 		this.groups.add(groupToAdd);
 	}
@@ -67,9 +64,6 @@ public class Prompt {
 
 		String userName = this.keyboardIn.nextLine();
 		Student studentToBeLoggedIn = this.findStudentByName(userName);
-
-		// If the student is already in the system, ask for their password,
-		// otherwise create a new student
 		if (studentToBeLoggedIn != null) {
 			this.executePasswordMenu(studentToBeLoggedIn);
 			
@@ -88,12 +82,10 @@ public class Prompt {
 				return foundStudent;
 			}
 		}
-
 		return null;
 	}
 	
 	private void executePasswordMenu(Student studentToBeLoggedIn) {
-		// Check user input against the student's password, call recursively if wrong
 		System.out.println("Please enter your password: ");
 		String password = this.keyboardIn.nextLine();
 		if(studentToBeLoggedIn.checkPassword(password)) {
@@ -121,7 +113,6 @@ public class Prompt {
 		String password = this.keyboardIn.next();
 		this.keyboardIn.nextLine();
 
-
 		Student newStudent = new Student(name, email, classYear, password);
 		this.addStudentToList(newStudent);
 
@@ -131,7 +122,6 @@ public class Prompt {
 	private void displayRootMenu() {
 		System.out.println("Current student: " + this.currentStudent.getName());
 		System.out.println();
-
 		System.out.println("0. Create a group");
 		System.out.println("1. See groups");
 		System.out.println("2. See groups by tags");
@@ -143,9 +133,8 @@ public class Prompt {
 
 	private void executeRootMenu() {
 		int inputChoice = getInt("Please enter a valid integer value");
-		this.keyboardIn.nextLine();
+		this.keyboardIn.nextLine();	
 
-		
 		if (inputChoice == 0) {
 			// Create a group
 			currentGroup = createStudentGroup();
@@ -232,6 +221,7 @@ public class Prompt {
 	private void executeSelectGroupMenu() {
 		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
+		//back to root menu
 		if (inputChoice == -1) {
 			rootMenu();
 		} else if (inputChoice >= this.groups.size() || inputChoice < -1) {
@@ -242,13 +232,12 @@ public class Prompt {
 			this.currentGroup = this.groups.get(inputChoice);
 			viewGroupMenu();
 		}
-
 	}
 
 	private void displayViewGroupMenu() {
 		System.out.println("Current group: " + this.currentGroup.getGroupName());
 		System.out.println();
-		
+
 		ArrayList<Student> members = this.currentGroup.getMembers();
 		
 		if(members.contains(this.currentStudent)) {
@@ -273,8 +262,7 @@ public class Prompt {
 		
 		if(this.currentGroup.isAdmin(currentStudent)) {
 			System.out.println("8. View admin options");
-		}
-		
+		}	
 	}
 
 	private void executeViewGroupMenu() {
@@ -309,11 +297,9 @@ public class Prompt {
 		} else if (inputChoice == 6){
 			selectGroupMenu();
 		} else if (inputChoice == 7){
-
 			rootMenu();
 		} else if (inputChoice == 8) {
 			adminOrInvalid();
-
 		} else {
 			System.out.println("Please enter a valid option");
 			viewGroupMenu();
@@ -344,7 +330,6 @@ public class Prompt {
 		} else {
 			displayEvent(groupEvents.get(inputChoice));
 		}
-
 	}
 	
 	private void displayEvent(Event current) {
@@ -359,6 +344,7 @@ public class Prompt {
 		
 		displayRSVPMenu();
 		executeRSVPMenu(current);
+
 	}
 
 	private void displayRSVPMenu() {
@@ -444,7 +430,6 @@ public class Prompt {
 				groupTag = tag;
 			}
 		}
-		//TODO: Allow users to view group from here? (next iteration?)
 		ArrayList<StudentGroup> groupsToDisplay = getGroupByTag(groupTag);
 		if(groupsToDisplay.isEmpty()) {
 			System.out.println("No groups with this tag");
@@ -454,12 +439,10 @@ public class Prompt {
 			}
 		}
 	}
-
 	
 	private void displayAdminMenu() {
 		System.out.println("Current group: " + this.currentGroup.getGroupName());
-		System.out.println();
-		
+		System.out.println();		
 		Student owner = this.currentGroup.getOwner();
 		if(this.currentStudent.equals(owner)) {
 			System.out.println("0. View owner options");
@@ -538,12 +521,12 @@ public class Prompt {
 			System.out.println("Please enter a valid option");
 			displayAdminMenu();
 			executeAdminMenu();
-		}
-		
+		}		
 	}
 
+	//Finds admin and removes them from list of possible students to be kicked, then ability to promote another student
 	private void displayAdminPromoteMenu() {
-		//finding owner and removing them from list of possible students to be kicked
+
 		ArrayList<Student> studentsInGroup = new ArrayList<Student>(this.currentGroup.getMembers());
 		studentsInGroup.remove(this.currentStudent);
 		ArrayList<Student> admins = new ArrayList<Student>(this.currentGroup.getAdmins());
@@ -585,6 +568,7 @@ public class Prompt {
 		}
 	}
 	
+	//demotes an admin from admin position
 	private void displayAdminDemoteMenu() {
 		ArrayList<Student> admins = new ArrayList<Student>(this.currentGroup.getAdmins());
 		admins.remove(this.currentStudent);
@@ -623,8 +607,8 @@ public class Prompt {
 		}
 	}
 	
+	//finds owner and removes them from list of possible students to be kicked, then promotes a student to owner
 	private void displayOwnershipTransferMenu() {
-		//finding owner and removing them from list of possible students to be kicked
 		ArrayList<Student> studentsInGroup = new ArrayList<Student> (this.currentGroup.getMembers());
 		studentsInGroup.remove(this.currentStudent);
 		
@@ -747,8 +731,9 @@ public class Prompt {
 		}
 	}
 	
+	//finds owner and removing them from list of possible students to be kicked, then ability to kick out student from group
 	private void displayKickStudentMenu() {
-		//finding owner and removing them from list of possible students to be kicked
+		
 		ArrayList<Student> studentsInGroup = new ArrayList<Student>(this.currentGroup.getMembers());
 		Student owner = this.currentGroup.getOwner();
 		studentsInGroup.remove(owner);
@@ -771,8 +756,7 @@ public class Prompt {
 			System.out.println();
 			displayAdminMenu();
 			executeAdminMenu();
-		}
-		
+		}		
 	}
 	
 	private void executeKickStudentMenu(ArrayList<Student> studentsInGroup) {
@@ -795,7 +779,7 @@ public class Prompt {
 		}
 	}
 	
-	
+	//see classes by tags
 	private void changeTagMenu() {
 		printTagChoices();
 		Tag groupTag = chooseTag();
@@ -848,7 +832,6 @@ public class Prompt {
 		System.out.println("Please input a password for the student: ");
 		String password = this.keyboardIn.next();
 		this.keyboardIn.nextLine();
-
 		Student newStudent = new Student(name, email, classYear, password);
 		this.addStudentToList(newStudent);
 
@@ -881,11 +864,8 @@ public class Prompt {
 		if(isPrivateQuery.equals("Y") || isPrivateQuery.equals("y")) {
 			isPrivate = true;
 		}
-
 		StudentGroup newGroup = new StudentGroup(groupName, groupDescription, currentStudent, isPrivate, groupTag);
-
 		this.addStudentGroupToList(newGroup);
-
 		return newGroup;
 	}
 
