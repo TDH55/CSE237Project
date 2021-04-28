@@ -501,7 +501,8 @@ public class Prompt {
 		System.out.println("1. Promote group member to admin.");
 		System.out.println("2. Remove admin.");
 		System.out.println("3. Transfer ownership to a group member.");
-		System.out.println("4. Back to admin menu.");
+		System.out.println("4. Change group name and/or description.");
+		System.out.println("5. Back to admin menu.");
 	}
 		
 	private void executeOwnerMenu() {
@@ -514,7 +515,10 @@ public class Prompt {
 			displayAdminDemoteMenu();
 		} else if (inputChoice == 3) {
 			displayOwnershipTransferMenu();
-		} else if(inputChoice == 4) {
+		} else if (inputChoice == 4) {
+			changeNameMenu();
+		}
+		else if(inputChoice == 5) {
 			displayAdminMenu();
 			executeAdminMenu();
 		} else {
@@ -798,7 +802,57 @@ public class Prompt {
 		}
 		return groupTag;
 	}
-
+	
+	private void changeNameMenu(){
+		System.out.println("Change group name (y/n)?");
+		String input = keyboardIn.next();
+		keyboardIn.nextLine();
+		if(input.equals("y") || input.equals("Y")) {
+			System.out.println("Please input a new group name: ");
+			Scanner wholeLine = new Scanner(System.in).useDelimiter("\\n");
+			String newGroupName = wholeLine.next();
+			wholeLine.nextLine();
+			
+			this.currentGroup.setGroupName(newGroupName);
+			
+			System.out.println("Group name successfully changed.");
+			System.out.println();
+			changeDescriptionMenu();
+		} else if(input.equals("n") || input.equals("N")) {
+			changeDescriptionMenu();
+		} else {
+			System.out.println("Please input a valid choice");
+			System.out.println();
+			changeNameMenu();
+		}
+	}
+	
+	private void changeDescriptionMenu(){
+		System.out.println("Change group description (y/n)?");
+		String input = keyboardIn.next();
+		keyboardIn.nextLine();
+		if(input.equals("y") || input.equals("Y")) {
+			System.out.println("Please input a new group description: ");
+			Scanner wholeLine = new Scanner(System.in).useDelimiter("\\n");
+			String newGroupDesc = wholeLine.next();
+			wholeLine.nextLine();
+			
+			this.currentGroup.setDescription(newGroupDesc);
+			
+			System.out.println("Group description successfully changed.");
+			System.out.println();
+			displayOwnerMenu();
+			executeOwnerMenu();
+		} else if(input.equals("n") || input.equals("N")) {
+			displayOwnerMenu();
+			executeOwnerMenu();
+		} else {
+			System.out.println("Please input a valid choice");
+			System.out.println();
+			changeNameMenu();
+		}
+	}
+	
 	private void displaySearch() {
 		System.out.println("Enter a search term for the group you want");
 	}
