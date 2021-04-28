@@ -1,7 +1,10 @@
 package StudentGroupApp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.spi.CalendarNameProvider;
 
 public class Prompt {
 	private ArrayList<Student> students;
@@ -104,7 +107,7 @@ public class Prompt {
 		String email = this.keyboardIn.next();
 		this.keyboardIn.nextLine();
 		System.out.println("Please input a class year for the student: ");
-		int classYear = this.keyboardIn.nextInt();
+		int classYear = getInt("Please enter a valid integer value for the class year");
 		this.keyboardIn.nextLine();
 		System.out.println("Please input a password for the student: ");
 		String password = this.keyboardIn.next();
@@ -129,8 +132,9 @@ public class Prompt {
 	}
 
 	private void executeRootMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
-		this.keyboardIn.nextLine();		
+		int inputChoice = getInt("Please enter a valid integer value");
+		this.keyboardIn.nextLine();	
+
 		if (inputChoice == 0) {
 			// Create a group
 			currentGroup = createStudentGroup();
@@ -215,7 +219,7 @@ public class Prompt {
 	}
 
 	private void executeSelectGroupMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		//back to root menu
 		if (inputChoice == -1) {
@@ -262,7 +266,7 @@ public class Prompt {
 	}
 
 	private void executeViewGroupMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		ArrayList<Student> members = this.currentGroup.getMembers();
 		
@@ -313,7 +317,7 @@ public class Prompt {
 	}
 
 	private void executeEventMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		ArrayList<Event> groupEvents = currentGroup.getEvents();
 		if (inputChoice == -1) {
@@ -336,11 +340,37 @@ public class Prompt {
 		for (Student rsvped : current.getRsvpedStudents()) {
 			System.out.println(rsvped.getName());
 		}
-		System.out.println();	
-		displayViewGroupMenu();
-		executeViewGroupMenu();
+		System.out.println();
+		
+		displayRSVPMenu();
+		executeRSVPMenu(current);
+
 	}
 
+	private void displayRSVPMenu() {
+		System.out.println("1. RSVP for this event");
+		System.out.println("2. Return to group view");
+	}
+	
+	private void executeRSVPMenu(Event current) {
+		int inputChoice = getInt("Please enter a valid integer value");
+		keyboardIn.nextLine();
+		if (inputChoice == 1) {
+			current.addStudent(currentStudent);
+			displayViewGroupMenu();
+			executeViewGroupMenu();
+		}
+		else if (inputChoice == 2) {
+			displayViewGroupMenu();
+			executeViewGroupMenu();
+		}
+		else {
+			System.out.println("Please choose a valid option");
+			executeRSVPMenu(current);
+			
+		}
+	}
+	
 	private void adminOrInvalid() {
 		if(this.currentGroup.isAdmin(currentStudent)) {
 			displayAdminMenu();
@@ -392,7 +422,7 @@ public class Prompt {
 	private void selectTagMenu() {
 		System.out.println("Enter the tag you would like to see groups for");
 		printTagChoices();
-		int tagChoice = this.keyboardIn.nextInt();
+		int tagChoice = getMenuChoice(Tag.values().length);
 		keyboardIn.nextLine();
 		Tag groupTag = Tag.None;
 		for (Tag tag : Tag.values()) {
@@ -426,7 +456,7 @@ public class Prompt {
 	}
 	
 	private void executeAdminMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		
 		if(inputChoice == 0) {
@@ -475,7 +505,7 @@ public class Prompt {
 	}
 		
 	private void executeOwnerMenu() {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		
 		if(inputChoice == 1) {
@@ -520,7 +550,7 @@ public class Prompt {
 	}
 	
 	private void executeAdminPromoteMenu(ArrayList<Student> studentsInGroup) {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		
 		if(inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
@@ -533,7 +563,7 @@ public class Prompt {
 			displayOwnerMenu();
 			executeOwnerMenu();
 		} else {
-			System.out.println("Please inpute a valid choice.");
+			System.out.println("Please input a valid choice.");
 			displayAdminPromoteMenu();
 		}
 	}
@@ -559,7 +589,7 @@ public class Prompt {
 	}
 	
 	private void executeAdminDemoteMenu(ArrayList<Student> admins) {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		
 		if(inputChoice >= 0 && inputChoice < admins.size()) {
@@ -572,7 +602,7 @@ public class Prompt {
 			displayOwnerMenu();
 			executeOwnerMenu();
 		} else {
-			System.out.println("Please inpute a valid choice.");
+			System.out.println("Please input a valid choice.");
 			displayAdminDemoteMenu();
 		}
 	}
@@ -598,40 +628,35 @@ public class Prompt {
 	}
 	
 	private void executeOwnershipTransferMenu(ArrayList<Student> studentsInGroup) {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
-		
-		if(inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
+
+		if (inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
 			Student studentToPromote = studentsInGroup.get(inputChoice);
 			this.currentGroup.setOwner(studentToPromote);
-			System.out.println("Ownership successfully transferred to " + studentToPromote.getName() + "." );
+			System.out.println("Ownership successfully transferred to " + studentToPromote.getName() + ".");
 			System.out.println();
 			displayAdminMenu();
 			executeAdminMenu();
-		} else if(inputChoice == studentsInGroup.size()) {
+		} else if (inputChoice == studentsInGroup.size()) {
 			displayOwnerMenu();
 			executeOwnerMenu();
 		} else {
-			System.out.println("Please inpute a valid choice.");
+			System.out.println("Please input a valid choice.");
 			displayAdminPromoteMenu();
 		}
-
+	}
 	private void createEventMenu() {
 		System.out.println("Please input a name for the event: ");
 		String name = this.keyboardIn.nextLine();
 		System.out.println("Please input a description of the event: ");
 		String description = this.keyboardIn.nextLine();
-		System.out.println("Please input the date and time of the event in integers, formatted as such: ");
-		System.out.println("Year month day hour minute");
-		int year = this.keyboardIn.nextInt();
-		int month = this.keyboardIn.nextInt();
-		int day = this.keyboardIn.nextInt();
-		int hour = this.keyboardIn.nextInt();
-		int minute = this.keyboardIn.nextInt();
-	
+		//TODO: more in depth error handling here
+		Calendar date = getDate();
 		this.keyboardIn.nextLine();
 
-		Event newEvent = new Event(name, description, month, day, year, hour, minute, currentGroup.getOwner());
+		//TODO: change constructor to take in a date object, not individual value
+		Event newEvent = new Event(name, description, date, currentGroup.getOwner());
 		currentGroup.addEvent(newEvent);
 
 	}
@@ -735,7 +760,7 @@ public class Prompt {
 	}
 	
 	private void executeKickStudentMenu(ArrayList<Student> studentsInGroup) {
-		int inputChoice = this.keyboardIn.nextInt();
+		int inputChoice = getInt("Please enter a valid integer value");
 		keyboardIn.nextLine();
 		
 		if(inputChoice >= 0 && inputChoice < studentsInGroup.size()) {
@@ -763,7 +788,7 @@ public class Prompt {
 	}
 
 	private Tag chooseTag() {
-		int tagChoice = keyboardIn.nextInt();
+		int tagChoice = getMenuChoice(Tag.values().length);
 		keyboardIn.nextLine();
 		Tag groupTag = Tag.None;
 		for (Tag tag : Tag.values()) {
@@ -802,7 +827,7 @@ public class Prompt {
 		String email = this.keyboardIn.next();
 		this.keyboardIn.nextLine();
 		System.out.println("Please input a class year for the student: ");
-		int classYear = this.keyboardIn.nextInt();
+		int classYear = getInt("Please enter a valid integer value for the year");
 		this.keyboardIn.nextLine();
 		System.out.println("Please input a password for the student: ");
 		String password = this.keyboardIn.next();
@@ -849,6 +874,61 @@ public class Prompt {
 			System.out.print((tag.ordinal() + 1) + ". ");
 			System.out.println(tag.toString());
 		}
+	}
+
+	private int getInt(String errorMessage) {
+		int val;
+		try {
+			val = this.keyboardIn.nextInt();
+		} catch(InputMismatchException e) {
+			System.out.println(errorMessage);
+			this.keyboardIn.nextLine();
+			return getInt(errorMessage);
+		}
+		return val;
+	}
+
+	private int getMenuChoice(int maxValue) {
+		int choice;
+		try {
+			choice = this.keyboardIn.nextInt();
+			if(choice > maxValue) {
+				throw new Exception("Invalid menu option");
+			}
+		} catch (Exception e) {
+			System.out.println("Please select a valid menu option");
+			this.keyboardIn.nextLine();
+			return getMenuChoice(maxValue);
+		}
+		return choice;
+	}
+
+	private Calendar getDate() {
+		Calendar date = Calendar.getInstance();
+		System.out.println("Please enter the year of the event as an integer");
+		int year = getInt("Please enter a valid integer value for the year");
+		System.out.println("Please enter the month of the event as an integer");
+		int month = getInt("Please enter a valid integer value for the month");
+		System.out.println("Please enter the day of the event as an integer");
+		int day = getInt("Please enter a valid integer value for the day");
+		System.out.println("Please enter the hour of the event as an integer");
+		int hour = getInt("Please enter a valid integer value for the hour");
+		System.out.println("Please enter the minute of the event as an integer");
+		int minute = getInt("Please enter a valid integer value for the minute");
+		try {
+			date.set(Calendar.YEAR, year);
+			date.set(Calendar.MONTH, month);
+			date.set(Calendar.DAY_OF_MONTH, day);
+			date.set(Calendar.HOUR, hour);
+			date.set(Calendar.MINUTE, minute);
+		} catch(Exception e) {
+
+			System.out.println("Please enter a valid date in the Year Month Day Hour Minute format");
+			this.keyboardIn.nextLine();
+			return getDate();
+		}
+
+		return date;
 	}
 }
 
